@@ -1,0 +1,122 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="{% static 'bootstrap/' %}css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/' %}blog.css">
+
+    <!-- Option 1: jQuery and Bootstrap Bundle (includes Popper) -->
+    <script src="{% static 'bootstrap/' %}js/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+    <script src="{% static 'bootstrap/' %}js/bootstrap.bundle.min.js"></script>
+
+
+    <title>{{title}}</title>
+  </head>
+  <body>
+    <div class="container-xl">
+      <header class="blog-header py-3">
+        <div class="row flex-nowrap justify-content-between align-items-center">
+          <div class="col-4 pt-1">
+            <a class="text-muted" href="#"> {{today}}</a>
+          </div>
+          <div class="col-4 text-center">
+            <a class="blog-header-logo text-dark" href="#">Stories Blog</a>
+          </div>
+          <div class="col-4 d-flex justify-content-end align-items-center">
+            <a class="text-muted" href="#" aria-label="Search">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="mx-3" role="img" viewBox="0 0 24 24" focusable="false"><title>Search</title><circle cx="10.5" cy="10.5" r="7.5"/><path d="M21 21l-5.2-5.2"/></svg>
+            </a>
+            <a class="btn btn-sm btn-outline-secondary" href="#">Sign up</a>
+          </div>
+        </div>
+      </header>
+      <div class="nav-scroller py-1 mb-2">
+        <nav class="nav d-flex justify-content-between">
+          <a class="p-2 text-muted" href="{% url 'stories:index'%}">Home</a>
+         
+        {%if categories %}
+        {% for cate in categories %}
+        <a class="p-2 text-muted {% if cate.id == cat_id %}active{% endif %}" href="{% url 'stories:category' cate.id%}">{{cate.name}}</a>
+        {%endfor%}
+        {%endif%}
+          {% comment %} <a class="p-2 text-muted {% if story_id > 0 %}active{% endif %}" href="{% url 'stories:story.html' latest.id%}">Story</a> {% endcomment %}
+          {% comment %} <a class="p-2 text-muted" href="{% url 'stories:contact.html'%}">Contact</a> {% endcomment %}
+        </nav>
+      </div>
+
+
+   
+      <main role="main" class="container">
+    {% block body_block %}
+    <!-- PHẦN NỘI DUNG CÁC TRANG SẼ NẰM Ở Đ Y! -->
+    {% endblock %}
+
+
+</main><!-- /.container -->
+
+
+<footer class="pt-4 my-md-5 pt-md-5 border-top">
+  <div class="row">
+    <div class="col-12 col-md">
+     
+      <h3><img class="mb-2" src="https://getbootstrap.com/docs/4.6/assets/brand/bootstrap-solid.svg" alt="" width="24" height="24">  About</h3>
+     <p> Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+
+
+     </p>
+     
+
+
+    </div>
+    <div class="col-6 col-md">
+      <h5>Categories</h5>
+      <ul class="list-unstyled text-small">  
+        {%if categories %}
+        {% for cate in categories %}
+        <li><a class="text-muted" href="{% url 'stories:category' cate.id%}">{{cate.name}}</a></li>
+        {%endfor%}
+        {%endif%}
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>Resources</h5>
+      <ul class="list-unstyled text-small">
+        <li><a class="text-muted" href="#">Resource</a></li>
+        <li><a class="text-muted" href="#">Resource name</a></li>
+        <li><a class="text-muted" href="#">Another resource</a></li>
+        <li><a class="text-muted" href="#">Final resource</a></li>
+      </ul>
+    </div>
+    <div class="col-6 col-md">
+      <h5>Newest stories</h5>
+      <div class="row">
+        {%if newest %}
+        {% for new in newest %}
+        <div class="col-6">
+          <a href="{% url 'stories:story.html' new.id%}">
+        <img class="img-thumbnail" src="{{MEDIA_URL}}{{new.image}}" alt="{{new.name}}">
+      </a>
+      </div>
+        {%endfor%}
+        {%endif%}
+    </div>
+    </div>
+  </div>
+   
+</footer>
+<div class=" text-muted" style="    background-color: #f5f5f5;">
+  <p class="float-right">
+    <a href="#">Back to top</a>
+  </p>
+  <p> <small class="d-block mb-3 text-muted">&copy; 2017-2022</small> </p>
+</div>
+
+
+</div>
+</body>
+</html>

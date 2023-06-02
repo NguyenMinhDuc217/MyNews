@@ -1,0 +1,30 @@
+<div class="row mx-0">
+    <div class="col-12 text-center pb-4 pt-4">
+         <nav aria-label="Page navigation example">
+            <ul class="pagination">
+            {% if items.has_other_pages %}
+                {% if items.has_previous %}
+                    <li class="page-item"><a href="?page={{ items.previous_page_number }}"
+                        class="page-link"><i class="fa fa-long-arrow-left"></i>&nbsp;&nbsp; Previous</a></li>
+                {% else %}
+                    <div class="disabled"><span></span></div>
+                {% endif %}
+
+                {% for i in items.paginator.page_range %}
+                    {% if items.number == i %}
+                        <li class="page-item"><a href="?page={{ i }}" class="page-link active">{{i}}</a></li>
+                    {% else %}
+                        <li class="page-item"><a href="?page={{ i }}" class="page-link">{{i}}</a></li>
+                    {% endif %}
+                {% endfor %}
+
+                {% if items.has_next %}
+                    <li class="page-item"><a href="?page={{ items.next_page_number }}" class="page-link">
+                        Next <i class="fa fa-long-arrow-right"></i>&nbsp;&nbsp; </a></li>
+                {% else %}
+                    <div class="disabled"><span></span></div>
+                {% endif %}
+            {% endif %}
+            </ul>
+    </div>
+</div>

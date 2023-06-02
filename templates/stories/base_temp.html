@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>{{title}}</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    </head>
+
+    <body>
+        <!-- Navbar (sit on top) -->
+        <div class="w3-top">
+            <div class="w3-bar w3-white w3-wide w3-padding w3-card">
+            <a href="#home" class="w3-bar-item w3-button"><b>BR</b> Architects</a>
+            <!-- Float links to the right. Hide them on small screens -->
+            <div class="w3-right w3-hide-small">
+                {% if categories %}
+                    {% for category in categories %}
+                        <a href="#projects" class="w3-bar-item w3-button">{{category.name}}</a>
+                    {% endfor %}
+                {% endif %}
+            </div>
+            </div>
+        </div>
+
+        
+
+        {% block body_block %}
+            <!-- Nội dung -->
+        {% endblock body_block %}
+        
+        <!-- Footer -->
+        <footer class="w3-center w3-black w3-padding-16">
+            <p>Powered by <a href="https://www.w3schools.com/w3css/default.asp" title="W3.CSS" target="_blank" class="w3-hover-text-green">w3.css</a></p>
+        </footer>
+    </body>
+</html>

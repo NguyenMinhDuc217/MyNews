@@ -1,0 +1,55 @@
+{% extends 'stories/base.html' %}
+{% load static %}
+
+{% block body_block %}
+
+    <div class="row">
+        <div class="col-md-8">
+            <h3 class="pb-4 mb-4 font-italic border-bottom">{{category.name}}</h3>  
+
+            {%if stories %}
+                {%for story in stories %}
+                <div class="row pb-4">
+                    <div class="col-md-5">
+                        <div class="story_img">
+                            <div class="story_img2">
+                                {% if story.image.url %}    
+                                <img class="img-thumbnail" src="{{story.image.url}}" style="width:50%">
+                                {% else %}
+                                <img class="img-thumbnail" src="/static/images/default.jpg">
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div><!-- col-->
+                    <div class="col-md-7">
+                        {% comment %} <a class="story_name" href="{% url 'stories:story.html' story.id%}">{{story.name}}</a> {% endcomment %}
+                        <span> {{story.public_day}} <i>by</i> {{story.author}} </span>
+                        <div class="story_desc">{{story.content|truncatewords:30}}</div>
+                    </div><!-- col-->
+                </div>
+                {%endfor%}
+            {%endif%}
+        
+        {% include 'stories/paginator.html' %}    
+
+        </div><!-- /.col-->
+        <div class="col-md-4">
+            <h3>Newest stories</h3>
+            {%if newest %}
+                {% for new in newest %}
+                    <div class="row">
+                        <div class="col-md-6">
+                            <img class="img-thumbnail" src="{{MEDIA_URL}}{{new.image}}" alt="{{new.name}}">
+                        </div><!-- /.col-->
+                        <div class="col-md-6">
+                            <h4> <a href="{% url 'stories:story.html' new.id%}"> {{new.name}}</a></h4>
+                            <span>  {{new.public_day}}</span>
+                        </div><!-- /.col-->
+                    </div><!-- /.row-->
+                {%endfor%}
+            {%endif%}  
+        </div><!-- /.col-->
+    </div><!-- /.row-->
+
+{% endblock body_block %}
+
