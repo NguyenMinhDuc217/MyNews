@@ -1,0 +1,240 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% load humanize %}
+{% block body_block %}
+<!-- Slider Area -->
+<section class="hero-slider">
+    <!-- Single Slider -->
+    <a href="shop-grid.html">
+        <div class="single-slider">
+            <div class="container">
+                <div class="row no-gutters">
+                    <div class="col-lg-9 offset-lg-3 col-12">
+                        <div class="text-inner">
+                            <div class="row">
+                                <div class="col-lg-7 col-12">
+                                    <div class="hero-text">	
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </a>
+    <!--/ End Single Slider -->
+</section>
+<!--/ End Slider Area -->	
+
+
+<!-- Start Midium Banner  -->
+
+<section class="midium-banner">		
+    <div class="section-title">
+    </div>
+    <div class="container">
+        <div class="row">
+            
+            {%if categories %}
+                {% for cat in categories %}
+                <!-- Single Banner  -->
+                <div class="col-lg-6 col-md-6 col-12">
+                    <div class="single-banner">
+                        <img class="banner1" src="{{MEDIA_URL}}{{cat.image}}" alt="{{cat.name}}">
+                        <div class="content">
+                            <p><h3>{{cat.name}}</h3></p>
+                            <h5><font color="red">Nhiều sản phẩm <br>Giảm tới<span> 50%</span></font></h5>
+                            <a href="#">Shop Now</a>
+                        </div>
+                    </div>
+                </div>
+                <!-- /End Single Banner  -->
+                {%endfor%}
+            {%endif%}
+        </div>
+    </div>
+</section>
+<!-- End Midium Banner -->
+
+<!-- Start Most Popular -->
+<div class="product-area most-popular section">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="section-title">
+                    <h2>Hot Item</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="owl-carousel popular-slider">
+                    <!-- Start Single Product -->
+                    {% for product in products %}
+                    <div class="single-product">
+                        <div class="product-img">
+                            <a href="product-details.html">
+                                <img class="default-img" src="{{MEDIA_URL}}{{product.image}}" alt="#">
+                                <img class="hover-img" src="{{MEDIA_URL}}{{product.banner}}" alt="#">
+                                <span class="out-of-stock">Hot</span>
+                            </a>
+                            <div class="button-head">
+                                <div class="product-action">
+                                    <a data-toggle="modal" data-target="#exampleModal" title="Quick View" href="#"><i class=" ti-eye"></i><span>Quick Shop</span></a>
+                                    <a title="Wishlist" href="#"><i class=" ti-heart "></i><span>Add to Wishlist</span></a>
+                                    <a title="Compare" href="#"><i class="ti-bar-chart-alt"></i><span>Add to Compare</span></a>
+                                </div>
+                                <div class="product-action-2">
+                                    <a title="Add to cart" href="#">Add to cart</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="product-content">
+                            <h3><a href="product-details.html">{{product.name}}</a></h3>
+                            <div class="product-price">
+                                <span class="old">$60.00</span>
+                                <span>$50.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Most Popular Area -->	
+
+
+<!-- Start Shop Home List  -->
+<section class="shop-home-list section">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="shop-section-title">
+                            <h1>On sale</h1>
+                        </div>
+                    </div>
+                </div>
+                <!-- Start Single List  -->
+                <div class="single-list">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="list-image overlay">
+                                <img src="https://via.placeholder.com/115x140" alt="#">
+                                <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 no-padding">
+                            <div class="content">
+                                <h4 class="title"><a href="#">Licity jelly leg flat Sandals</a></h4>
+                                <p class="price with-discount">$59</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Single List  -->
+                <!-- Start Single List  -->
+                <div class="single-list">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="list-image overlay">
+                                <img src="https://via.placeholder.com/115x140" alt="#">
+                                <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 no-padding">
+                            <div class="content">
+                                <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
+                                <p class="price with-discount">$44</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Single List  -->
+                <!-- Start Single List  -->
+                <div class="single-list">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="list-image overlay">
+                                <img src="https://via.placeholder.com/115x140" alt="#">
+                                <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 no-padding">
+                            <div class="content">
+                                <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
+                                <p class="price with-discount">$89</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- End Single List  -->
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="shop-section-title">
+                            <h1>Best Seller</h1>
+                        </div>
+                    </div>
+                </div>
+                <!-- Start Single List  -->
+                {% for bestsl in best_seller%}
+                    <div class="single-list">
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-12">
+                                <div class="list-image overlay">
+                                    <img src="{{MEDIA_URL}}{{bestsl.image}}" alt="#">
+                                    <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-12 no-padding">
+                                <div class="content">
+                                    <h5 class="title"><a href="#">{{bestsl.name}}</a></h5>
+                                    {% comment %} <p class="price with-discount">${{bestsl.price - bestsl.priceOrg}}</p> {% endcomment %}
+                                    <p class="price with-discount">${{ bestsl.price|subtract:bestsl.priceOrg|floatformat }}</p>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+                <!-- End Single List  -->
+            </div>
+            <div class="col-lg-4 col-md-6 col-12">
+                <div class="row">
+                    <div class="col-12">
+                        <div class="shop-section-title">
+                            <h1>Top viewed</h1>
+                        </div>
+                    </div>
+                </div>
+                <!-- Start Single List  -->
+                {% for viewed in top_viewed %}
+                <div class="single-list" style="height:210px">
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-12">
+                            <div class="list-image overlay">
+                                <img src="{{MEDIA_URL}}{{viewed.image}}" alt="#">
+                                <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
+                            </div>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-12 no-padding">
+                            <div class="content">
+                                <h5 class="title"><a href="#">{{viewed.name}}</a></h5>
+                                <p class="price with-discount">${{viewed.price|floatformat}}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+<!-- End Shop Home List  -->
+{% endblock body_block %}

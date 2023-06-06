@@ -45,6 +45,8 @@ INSTALLED_APPS = [
     'shop.apps.ShopConfig',
     'ckeditor',
     'ckeditor_uploader',
+    'django.contrib.humanize',
+    
 
 ]
 

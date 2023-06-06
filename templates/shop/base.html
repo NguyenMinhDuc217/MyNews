@@ -78,7 +78,7 @@
                         <div class="col-lg-2 col-md-2 col-12">
                             <!-- Logo -->
                             <div class="logo">
-                                <a href="{% url 'store:index.html'%}"><img src="{% static 'store/' %}images/logo.png" alt="logo"></a>
+                                <a href="{% url 'shop:index.html'%}"><img src="{% static 'shop/' %}images/logo.png" alt="logo"></a>
                             </div>
                             <!--/ End Logo -->
                             <!-- Search Form -->
@@ -86,7 +86,7 @@
                                 <div class="top-search"><a href="#0"><i class="ti-search"></i></a></div>
                                 <!-- Search Form -->
                                 <div class="search-top">
-                                    <form class="search-form" id="mobileSearch"  action="{% url 'store:search_form.html'%}?" >
+                                    <form class="search-form" id="mobileSearch"  action="{% url 'shop:search_form.html'%}?" >
                                         <input type="text"  name="keyword" placeholder="Search here..."  value="{% if keyword != 'None' %}{{keyword}}{% endif %}" >
                                         <a value="search"  onclick="initSearch('mobileSearch')"><i class="ti-search"></i></a>
                                     </form>
@@ -99,23 +99,29 @@
                         <div class="col-lg-8 col-md-7 col-12">
                             <div class="search-bar-top"> 
                                 <div class="search-bar text-left"> 
-                                    <form id="desktopSearch" action="{% url 'store:search_form.html'%}?" >
-                                    <select name="subcategory_id" class="chosen" >
-                                        <option value="*" {% if subcategory_id == 0 %}selected="selected"{% endif %}>Tất cả danh mục</option>
-                                        {%if categories %}
-                                        {% for cat in categories %}
-                                        {%if cat.subcategories %}
-                                                <optgroup label="{{cat.name}}">
-                                                    {% for subcat in cat.subcategories %}
-                                                <option value="{{subcat.id}}"  {% if subcat.id == subcategory_id %}selected="selected"{% endif %}> {{subcat.name}}</option> 
-                                                    {%endfor%}		
-                                                </optgroup>
-                                        {%endif%}
-                                        {%endfor%}
-                                        {%endif%}
-                                    </select>
-                                        <input type="text" name="keyword"  placeholder="Tìm sản phẩm....." value="{% if keyword != 'None' %}{{keyword}}{% endif %}">
-                                        <a class="btnn" onclick="initSearch('desktopSearch')"><i class="ti-search"></i></a>
+                                    <form id="desktopSearch" action="{% url 'shop:search_form.html'%}?" style="width:100%">
+                                        <div class="row">
+                                            <div class="col-sm-4" style="width 50%">
+                                                <select name="subcategory_id" class="chosen" >
+                                                    <option value="*" {% if subcategory_id == 0 %}selected="selected"{% endif %}>Tất cả danh mục</option>
+                                                    {%if categories %}
+                                                        {% for cat in categories %}
+                                                            {%if cat.subcategories %}
+                                                                <optgroup label="{{cat.name}}">
+                                                                    {% for subcat in cat.subcategories %}
+                                                                <option value="{{subcat.id}}"  {% if subcat.id == subcategory_id %}selected="selected"{% endif %}> {{subcat.name}}</option> 
+                                                                    {%endfor%}		
+                                                                </optgroup>
+                                                            {%endif%}
+                                                        {%endfor%}
+                                                    {%endif%}
+                                                </select>
+                                            </div>
+                                            <div class="col-sm-8" style="width 50%">
+                                                <input type="text" name="keyword"  placeholder="Tìm sản phẩm....." value="{% if keyword != 'None' %}{{keyword}}{% endif %}">
+                                                <a class="btnn" onclick="initSearch('desktopSearch')"><i class="ti-search"></i></a>
+                                            </div>
+                                        </div>
                                     </form>
                                 </div>
                             </div>
@@ -178,40 +184,37 @@
                                         <div class="navbar-collapse">	
                                             <div class="nav-inner">	
                                                 <ul class="nav main-menu menu navbar-nav">
-                                                        <li class="active"><a href="{% url 'store:index.html'%}">Home</a></li>				
-                                                                
-                                                        <!--
-                                                        
-                                                        <li><a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
+                                                        <li class="active"><a href="{% url 'shop:index.html'%}">Home</a></li>				
+                                                         
+                                                        {% comment %} <li><a href="#">Shop<i class="ti-angle-down"></i><span class="new">New</span></a>
                                                             <ul class="dropdown">
-                                                                <li><a href="{% url 'store:shop-grid.html' clatest.id%}">Cửa hàng</a></li>
-                                                                <li><a href="{% url 'store:cart.html' %}">Giỏ hàng</a></li>
-                                                                <li><a href="{% url 'store:checkout.html' %}">Thanh toán</a></li>
+                                                                <li><a href="{% url 'shop:shop-grid.html' clatest.id%}">Cửa hàng</a></li>
+                                                                <li><a href="{% url 'shop:cart.html' %}">Giỏ hàng</a></li>
+                                                                <li><a href="{% url 'shop:checkout.html' %}">Thanh toán</a></li>
                                                             </ul>
-                                                        </li>-->
+                                                        </li> {% endcomment %}
                                                         
                                                         
-                    {%if categories %}
-                    {% for cat in categories %}
-            
-                    {%if cat.subcategories %}
-                    <li ><a href="#">{{cat.name}}</a>
-                        <ul class="dropdown">
-                            {% for subcat in cat.subcategories %}
-                            <li><a href="{% url 'store:shop-grid.html' subcat.id%}">{{subcat.name}}</a></li>
-                            {%endfor%}
-                        </ul>
-                    </li>	
-                    {%endif%}
-                    
-                    {%endfor%}
-                    {%endif%}
-                    <li><a href="{% url 'store:cart.html' %}">Giỏ hàng</a></li>
-                    <li><a href="{% url 'store:checkout.html' %}">Thanh toán</a></li>
+                                                        {%if categories %}
+                                                            {% for cat in categories %}
+                                                                {%if cat.subcategories %}
+                                                                <li ><a href="#">{{cat.name}}</a>
+                                                                    <ul class="dropdown">
+                                                                        {% for subcat in cat.subcategories %}
+                                                                            <li><a href="{% url 'shop:shop-grid.html' subcat.id%}">{{subcat.name}}</a></li>
+                                                                        {%endfor%}
+                                                                    </ul>
+                                                                </li>	
+                                                                {%endif%}
+                                                            
+                                                            {%endfor%}
+                                                        {%endif%}
+                                                        <li><a href="{% url 'shop:cart.html' %}">Giỏ hàng</a></li>
+                                                        <li><a href="{% url 'shop:checkout.html' %}">Thanh toán</a></li>
 
 
                                                         <li><a href="http://127.0.0.1:8000/">Stories</a></li>													
-                                                        <li><a href="{% url 'store:contact.html' %}">Liên hệ</a></li>
+                                                        <li><a href="{% url 'shop:contact.html' %}">Liên hệ</a></li>
                                                     </ul>
                                             </div>
                                         </div>
@@ -400,7 +403,7 @@
                             <!-- Single Widget -->
                             <div class="single-footer about">
                                 <div class="logo">
-                                    <a href="index.html"><img src="{% static 'store/' %}images/logo2.png" alt="#"></a>
+                                    <a href="index.html"><img src="{% static 'shop/' %}images/logo2.png" alt="#"></a>
                                 </div>
                                 <p class="text">Cừa hàng chuyên cung cấp các sản phầm đồ dùng nhà biết và thiết bị gia đình</p>
                                 <p class="call">Cần hỗ trợ 24/7<span><a href="tel:123456789">(028) 38 351 056</a></span></p>
@@ -471,7 +474,7 @@
                             </div>
                             <div class="col-lg-6 col-12">
                                 <div class="right">
-                                    <img src="{% static 'store/' %}images/payments.png" alt="#">
+                                    <img src="{% static 'shop/' %}images/payments.png" alt="#">
                                 </div>
                             </div>
                         </div>
@@ -482,37 +485,37 @@
         <!-- /End Footer Area -->
  
         <!-- Jquery -->
-        <script src="{% static 'store/' %}js/jquery.min.js"></script>
-        <script src="{% static 'store/' %}js/jquery-migrate-3.0.0.js"></script>
-        <script src="{% static 'store/' %}js/jquery-ui.min.js"></script>
+        <script src="{% static 'shop/' %}js/jquery.min.js"></script>
+        <script src="{% static 'shop/' %}js/jquery-migrate-3.0.0.js"></script>
+        <script src="{% static 'shop/' %}js/jquery-ui.min.js"></script>
         <!-- Popper JS -->
-        <script src="{% static 'store/' %}js/popper.min.js"></script>
+        <script src="{% static 'shop/' %}js/popper.min.js"></script>
         <!-- Bootstrap JS -->
-        <script src="{% static 'store/' %}js/bootstrap.min.js"></script>
+        <script src="{% static 'shop/' %}js/bootstrap.min.js"></script>
         <!-- Color JS -->
-        <script src="{% static 'store/' %}js/colors.js"></script>
+        <script src="{% static 'shop/' %}js/colors.js"></script>
         <!-- Slicknav JS -->
-        <script src="{% static 'store/' %}js/slicknav.min.js"></script>
+        <script src="{% static 'shop/' %}js/slicknav.min.js"></script>
         <!-- Owl Carousel JS -->
-        <script src="{% static 'store/' %}js/owl-carousel.js"></script>
+        <script src="{% static 'shop/' %}js/owl-carousel.js"></script>
         <!-- Magnific Popup JS -->
-        <script src="{% static 'store/' %}js/magnific-popup.js"></script>
+        <script src="{% static 'shop/' %}js/magnific-popup.js"></script>
         <!-- Waypoints JS -->
-        <script src="{% static 'store/' %}js/waypoints.min.js"></script>
+        <script src="{% static 'shop/' %}js/waypoints.min.js"></script>
         <!-- Countdown JS -->
-        <script src="{% static 'store/' %}js/finalcountdown.min.js"></script>
+        <script src="{% static 'shop/' %}js/finalcountdown.min.js"></script>
         <!-- Nice Select JS -->
-        <script src="{% static 'store/' %}js/nicesellect.js"></script>
+        <script src="{% static 'shop/' %}js/nicesellect.js"></script>
         <!-- Flex Slider JS -->
-        <script src="{% static 'store/' %}js/flex-slider.js"></script>
+        <script src="{% static 'shop/' %}js/flex-slider.js"></script>
         <!-- ScrollUp JS -->
-        <script src="{% static 'store/' %}js/scrollup.js"></script>
+        <script src="{% static 'shop/' %}js/scrollup.js"></script>
         <!-- Onepage Nav JS -->
-        <script src="{% static 'store/' %}js/onepage-nav.min.js"></script>
+        <script src="{% static 'shop/' %}js/onepage-nav.min.js"></script>
         <!-- Easing JS -->
-        <script src="{% static 'store/' %}js/easing.js"></script>
+        <script src="{% static 'shop/' %}js/easing.js"></script>
         <!-- Active JS -->
-        <script src="{% static 'store/' %}js/active.js"></script>
+        <script src="{% static 'shop/' %}js/active.js"></script>
         <script src="{% static 'plugins/' %}jquery-chosen/chosen-min.js"></script>
         <script type="text/javascript"><!--
             function initSearch(elem_id) {
