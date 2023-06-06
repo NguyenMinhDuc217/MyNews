@@ -23,7 +23,8 @@ from django.conf import settings
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('stories/', include('stories.urls')),
-    #  re_path(r'^ckeditor/',include('ckeditor_uploader.urls'))
+    path('shop/', include('shop.urls')),
+    re_path(r'^ckeditor/',include('ckeditor_uploader.urls')),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)

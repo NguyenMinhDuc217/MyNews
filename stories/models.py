@@ -16,7 +16,8 @@ class Story(models.Model):
     name = models.CharField(max_length=150, unique=True)
     author = models.CharField(max_length=250)
     url = models.URLField(null=True)
-    content = models.TextField()
+    # content = models.TextField() #mặc định
+    content = RichTextUploadingField() #ckeditor richtext format
     public_day = models.DateField(default=datetime.date.today)
     image = models.ImageField(upload_to="static/images", default="static/images/default.jpg")
 

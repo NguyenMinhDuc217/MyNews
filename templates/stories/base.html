@@ -44,12 +44,10 @@
         <a class="p-2 text-muted {% if cate.id == cat_id %}active{% endif %}" href="{% url 'stories:category' cate.id%}">{{cate.name}}</a>
         {%endfor%}
         {%endif%}
-          {% comment %} <a class="p-2 text-muted {% if story_id > 0 %}active{% endif %}" href="{% url 'stories:story.html' latest.id%}">Story</a> {% endcomment %}
-          {% comment %} <a class="p-2 text-muted" href="{% url 'stories:contact.html'%}">Contact</a> {% endcomment %}
+          <a class="p-2 text-muted {% if story_id > 0 %}active{% endif %}" href="{% url 'stories:story.html' latest.id%}">Story</a>
+          <a class="p-2 text-muted" href="{% url 'stories:contact.html'%}">Contact</a>
         </nav>
       </div>
-
-
    
       <main role="main" class="container">
     {% block body_block %}

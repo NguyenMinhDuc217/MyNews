@@ -1,0 +1,4 @@
+setting Django 	: 	pip install Django 
+create project 	: 	python manage.py startproject MyNews
+run		:	python manage.py runserver 
+create app	: 	python manage.py startapp stories
