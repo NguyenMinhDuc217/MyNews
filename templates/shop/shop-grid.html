@@ -1,0 +1,172 @@
+{% extends 'shop/base.html'%}
+{% load static %}
+{% load humanize %}
+{% load %}
+{% block body_block %}
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="bread-inner">
+                    <ul class="bread-list">
+                        <li><a href="index1.html">Home<i class="ti-arrow-right"></i></a></li>
+                        {% comment %} <li><a href="{% url 'shop/index.html' %}">Home<i class="ti-arrow-right"></i></a></li> {% endcomment %}
+
+                        <li class="active"><a href="blog-single.html">Cửa hàng</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
+
+<!-- Product Style -->
+<section class="product-area shop-sidebar shop ">
+    <div class="container">
+        <h2 class="mb-5 mt-5">{{subInfo.name}}</h2>
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-12">  
+                <div class="shop-sidebar">
+                    <!-- Single Widget -->
+                    <div class="single-widget category">
+                        <h3 class="title">Danh mục</h3>
+                        <ul class="categor-list">
+                            {%if categories %}
+                                {% for cat in categories %}
+                                    {%if cat.subcategories %}
+                                    <li><a href="#">{{cat.name}}</a>
+                                        <ul class="categor-list">
+                                            {% for subcat in cat.subcategories %}
+                                                <li><a href="{% url 'shop:shop-grid.html' subcat.id%}" class="{% if subcat.id == subcat_id %}active{% endif %}">{{subcat.name}}</a></li>
+                                            {%endfor%}										
+                                        </ul>
+                                    </li>
+                                    {%endif%}
+                                {%endfor%}
+                            {%endif%}                            
+                        </ul>
+                    </div>
+                    <!--/ End Single Widget -->
+
+                    <!-- Shop By Price -->
+                    <div class="single-widget range">
+                        <h3 class="title">Giá</h3>
+                        <div class="price-filter">
+                            <div class="price-filter-inner">
+                                <div id="slider-range"></div>
+                                    <div class="price_slider_amount">
+                                    <div class="label-input">
+                                        <span>Khoảng giá:</span><input type="text" id="amount" name="price" placeholder="Nhập giá"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <ul class="check-box-list">
+                            <li>
+                                <label class="checkbox-inline" for="1"><input name="news" id="1" type="checkbox">$20 - $50<span class="count">(3)</span></label>
+                            </li>
+                            <li>
+                                <label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox">$50 - $100<span class="count">(5)</span></label>
+                            </li>
+                            <li>
+                                <label class="checkbox-inline" for="3"><input name="news" id="3" type="checkbox">$100 - $250<span class="count">(8)</span></label>
+                            </li>
+                        </ul>
+                    </div>
+                    <!--/ End Shop By Price -->
+
+                    <!-- Single Widget -->
+                    <div class="single-widget recent-post">
+                        <h3 class="title">Hàng mới về</h3>
+                        {%if newests %}
+                            {% for newest in newests %}
+                                <!-- Single Post -->
+                                <div class="single-post first">
+                                    <div class="image">
+                                        <img src="{{newest.image.url}}" alt="#">
+                                    </div>
+                                    <div class="content">
+                                        {% comment %} <h5><a href="{% url 'shop:product.html' newest.id%}">{{newest.name}}</a></h5> {% endcomment %}
+                                        <h5><a href="{% url 'shop:product-detail.html' newest.id%}">{{newest.name}}</a></h5>
+                                        <p class="price">{{newest.price|floatformat:0|intcomma}} $ </p>
+                                    </div>
+                                </div>
+                                <!-- End Single Post -->    
+                            {%endfor%}
+                        {%endif%}
+                    </div>
+                    <!--/ End Single Widget -->								
+                </div>
+            </div>
+            <div class="col-lg-9 col-md-8 col-12">
+                <div class="row">
+                    <div class="col-12">
+                        <!-- Shop Top -->
+                        <div class="shop-top">
+                            <div class="shop-shorter">
+                                <div class="single-shorter">
+                                    <label>Hiển thị :</label>
+                                    <select name="display">
+                                        <option value='9' selected="selected">09</option>
+                                        <option value='15'>15</option>
+                                        <option value='25'>25</option>
+                                        <option value='30'>30</option>
+                                    </select>
+                                </div>
+                                <div class="single-shorter">
+                                    <label>Theo :</label>
+                                    <select name="by">
+                                        <option value='name' selected="selected">Tên</option>
+                                        <option value='price'>Giá</option>												
+                                    </select>
+                                </div>
+                            </div>
+                            <ul class="view-mode">
+                                <li class="active"><a href="shop-grid.html"><i class="fa fa-th-large"></i></a></li>
+                                <li><a href="shop-list.html"><i class="fa fa-th-list"></i></a></li>
+                            </ul>
+                        </div>
+                        <!--/ End Shop Top -->
+                    </div>
+                </div>
+                <div class="row">
+                    {%if products %}
+                        {% for product in products %}
+                            <div class="col-lg-4 col-md-6 col-12">
+                                <div class="single-product">
+                                    <div class="product-img">
+                                        <a href="{% url 'shop:product-detail.html' product.id%}">
+                                            <img class="default-img" src="{{product.image.url}}" alt="{{product.name}}">
+                                        </a>
+                                        <div class="button-head">
+                                            <div class="product-action">
+                                                {% comment %} <a data-toggle="modal" data-target="#exampleModal" title="Quick View" href="{% url 'shop:shop-grid.html' subcat_id.id%}"><i class=" ti-eye"></i><span>Quick Shop</span></a> {% endcomment %}
+                                                <a  title="Quick View" onclick="quickview('{% url 'shop:product-quickview.html' product.id%}')"><i class=" ti-eye"></i><span>Quick Shop</span></a>
+                                                <a title="Wishlist" href="#"><i class=" ti-heart "></i><span>Add to Wishlist</span></a>
+                                                <a title="Compare" href="#"><i class="ti-bar-chart-alt"></i><span>Add to Compare</span></a>
+                                            </div>
+                                            <div class="product-action-2">
+                                                <a title="Add to cart" href="#">Add to cart</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="product-content">
+                                        {% comment %} <h3><a href="{% url 'shop:product.html' product.id%}">{{product.name}}</a></h3> {% endcomment %}
+                                        <h3><a href="{% url 'shop:product-detail.html' product.id%}">{{product.name}}</a></h3>
+                                        <div class="product-price">
+                                            <span>{{product.price|floatformat:0|intcomma}} VNĐ </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {%endfor%}
+                    {%endif%}
+                </div><!-- //end row -->
+            </div>
+        </div>
+    </div>
+</section>
+<!--/ End Product Style 1  -->	
+{% endblock body_block %}

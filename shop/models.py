@@ -32,9 +32,22 @@ class Product(models.Model):
     banner = models.ImageField(upload_to ="shop_media/product/", default ="shop_media/default.png")
     viewed = models.IntegerField(default=0)
     quantity_purchased = models.IntegerField(default=0)
+    rate = models.FloatField(default=0)
 
     def thumbnail(self): 
         return mark_safe(f'<img class="img-thumbnail" src = "{self.image.url}" width = "100"/>')
+    def __str__(self):
+        return self.name
+    
+class Cart(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.PROTECT)
+    name = models.CharField(max_length=150, unique=True)
+    quantility = models.IntegerField(default=0)
+    description = RichTextUploadingField()
+
+    ORDER_STATUS = [(0, 'failed'), (1, 'success'), (2, 'wait')]
+    status = models.IntegerField(choices=ORDER_STATUS)
+
     def __str__(self):
         return self.name
     

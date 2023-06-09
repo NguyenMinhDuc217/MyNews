@@ -1,8 +1,16 @@
 {% extends 'shop/base.html' %}
 {% load static %}
 {% load humanize %}
+{% load mathfilters %}
 {% block body_block %}
 <!-- Slider Area -->
+<style>
+    #a.all{
+        color: red;
+        font-size: x-large;
+        margin-right: 205px;
+    }
+</style>
 <section class="hero-slider">
     <!-- Single Slider -->
     <a href="shop-grid.html">
@@ -59,6 +67,13 @@
 
 <!-- Start Most Popular -->
 <div class="product-area most-popular section">
+    <div class="view-all">
+        <p style="text-align:right"><a class="all" style="color: #F7941D; font-size: x-large; margin-right: 205px;" href="product.html">View all</a><p>
+    </div>
+    {% comment %} <div class="row">
+    </div>
+        <div class="col-6">
+    </div> {% endcomment %}
     <div class="container">
         <div class="row">
             <div class="col-12">
@@ -119,60 +134,26 @@
                         </div>
                     </div>
                 </div>
+                {% for sale in on_sale %}
                 <!-- Start Single List  -->
-                <div class="single-list">
+                <div class="single-list" style="height:210px">
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-12">
                             <div class="list-image overlay">
-                                <img src="https://via.placeholder.com/115x140" alt="#">
+                                <img src="{{MEDIA_URL}}{{sale.image}}" alt="#">
                                 <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
                             </div>
                         </div>
                         <div class="col-lg-6 col-md-6 col-12 no-padding">
                             <div class="content">
-                                <h4 class="title"><a href="#">Licity jelly leg flat Sandals</a></h4>
-                                <p class="price with-discount">$59</p>
+                                <h4 class="title"><a href="#">{{sale.name}}</a></h4>
+                                <p class="price with-discount">${{sale.price}}</p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- End Single List  -->
-                <!-- Start Single List  -->
-                <div class="single-list">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-12">
-                            <div class="list-image overlay">
-                                <img src="https://via.placeholder.com/115x140" alt="#">
-                                <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-12 no-padding">
-                            <div class="content">
-                                <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
-                                <p class="price with-discount">$44</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Single List  -->
-                <!-- Start Single List  -->
-                <div class="single-list">
-                    <div class="row">
-                        <div class="col-lg-6 col-md-6 col-12">
-                            <div class="list-image overlay">
-                                <img src="https://via.placeholder.com/115x140" alt="#">
-                                <a href="#" class="buy"><i class="fa fa-shopping-bag"></i></a>
-                            </div>
-                        </div>
-                        <div class="col-lg-6 col-md-6 col-12 no-padding">
-                            <div class="content">
-                                <h5 class="title"><a href="#">Licity jelly leg flat Sandals</a></h5>
-                                <p class="price with-discount">$89</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- End Single List  -->
+                {% endfor %}
             </div>
             <div class="col-lg-4 col-md-6 col-12">
                 <div class="row">
@@ -184,7 +165,7 @@
                 </div>
                 <!-- Start Single List  -->
                 {% for bestsl in best_seller%}
-                    <div class="single-list">
+                    <div class="single-list" style="height:210px">
                         <div class="row">
                             <div class="col-lg-6 col-md-6 col-12">
                                 <div class="list-image overlay">
@@ -195,9 +176,8 @@
                             <div class="col-lg-6 col-md-6 col-12 no-padding">
                                 <div class="content">
                                     <h5 class="title"><a href="#">{{bestsl.name}}</a></h5>
-                                    {% comment %} <p class="price with-discount">${{bestsl.price - bestsl.priceOrg}}</p> {% endcomment %}
-                                    <p class="price with-discount">${{ bestsl.price|subtract:bestsl.priceOrg|floatformat }}</p>
-
+                                    {% comment %} <p class="price with-discount">${{ bestsl.price|subtract:bestsl.priceOrg|floatformat }}</p> {% endcomment %}
+                                    <p class="price with-discount">${{ bestsl.price|sub:bestsl.priceOrg|floatformat }}</p>
                                 </div>
                             </div>
                         </div>

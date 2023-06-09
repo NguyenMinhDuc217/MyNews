@@ -1,5 +1,6 @@
 from django.urls import path,re_path 
 from . import views 
+import include
 app_name = "stories"
 urlpatterns = [ 
 	path('index', views.index, name='index'),
@@ -8,4 +9,5 @@ urlpatterns = [
     path('story.html/<int:story_id>', views.story, name='story.html'),
     path('contact.html',views.contact, name='contact.html'),
     path('test',views.test, name='test'),
+    # path('cart/', include('cart.urls',namespace='cart')),
 ] 

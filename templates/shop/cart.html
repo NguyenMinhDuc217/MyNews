@@ -1,0 +1,177 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% load mathfilters %}
+{% block body_block %}
+<!-- Breadcrumbs -->
+<div class="breadcrumbs">
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <div class="bread-inner">
+                    <ul class="bread-list">
+                        <li><a href="index.html">Home<i class="ti-arrow-right"></i></a></li>
+                        <li class="active"><a href="blog-single.html">Giỏ hàng</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- End Breadcrumbs -->
+        
+<!-- Shopping Cart -->
+<div class="shopping-cart section">
+    {% csrf_token %}    
+    <div class="container">
+        <div class="row">
+            <div class="col-12">
+                <!-- Shopping Summery -->
+                <table class="table shopping-summery">
+                    <thead>
+                        <tr class="main-hading">
+                            <th>SẢN PHẨM</th>
+                            <th>TÊN</th>
+                            <th class="text-center">ĐƠN GIÁ</th>
+                            <th class="text-center">SỐ LƯỢNG</th>
+                            <th class="text-center">THÀNH TIỀN</th> 
+                            <th class="text-center"><i class="ti-trash remove-icon"></i></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for cart in carts%}
+                        <tr id="cart-{{cart.id}}">
+                            <td class="image" data-title="No"><img src="{{cart.product.image.url}}" alt="#"></td>
+                            <td class="product-des" data-title="Description">
+                                <p class="product-name"><a href="#">{{cart.product.name}}</a></p>
+                                <p class="product-des">{{cart.description|safe}}</p>
+                            </td>
+                            <td class="price" id="price-{{cart.id}}" data-title="Price" value="{{cart.product.price}}">$<span>{{cart.product.price}}</span></td>
+                            <td class="qty" data-title="Qty"><!-- Input Order -->
+                                <div class="input-group">
+                                    <div class="button minus">
+                                        <button id="action" type="button" prid={{cart.id}} onclick="updateQuantility(this, action='tru')" class="btn btn-primary btn-number">
+                                            <i class="ti-minus"></i>
+                                        </button>
+                                    </div>
+                                    <input id="quantility-{{cart.id}}" type="text" name="quant[1]" class="input-number"  data-min="1" data-max="100" value="{{cart.quantility}}">
+                                    <div class="button plus">
+                                        <button id="action" type="button" prid={{cart.id}} onclick="updateQuantility(this, action='cong')" class="btn btn-primary btn-number" >
+                                            <i class="ti-plus"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                                <!--/ End Input Order -->
+                            </td>
+                            <td class="total-amount"  data-title="Total">
+                                <span id='total-{{cart.id}}'>${{cart.quantility|mul:cart.product.price}}</span>
+                            </td>
+                            <td class="action" id="remove-{{cart.id}}"  data-title="Remove"><a prid={{cart.id}} onclick="deleteCart(this)" href=""><i class="ti-trash remove-icon"></i></a></td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                <!--/ End Shopping Summery -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <!-- Total Amount -->
+                <div class="total-amount">
+                    <div class="row">
+                        <div class="col-lg-8 col-md-5 col-12">
+                            <div class="left">
+                                <div class="coupon">
+                                    <form action="#" target="_blank">
+                                        <input name="Coupon" placeholder="Nhập mã giảm giá">
+                                        <button class="btn">Áp dụng</button>
+                                    </form>
+                                </div>
+                                <div class="checkbox">
+                                    <label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox"> Giao hàng (+20.000đ)</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-7 col-12">
+                            <div class="right">
+                                <ul>
+                                    <li>Tạm tính<span id='total'>${{total}}</span></li>
+                                    <li>Giao hàng<span>Miễn phí</span></li>
+                                    <li>Tiết kiệm<span>$20.00</span></li>
+                                    <li class="last">Tổng đơn hàng<span>$310.00</span></li>
+                                </ul>
+                                <div class="button5">
+                                    <a href="#" class="btn">Thanh toán</a>
+                                    <a href="#" class="btn">Tiếp tục mua sắm</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--/ End Total Amount -->
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function updateQuantility(even, action){
+        id = $(even).attr('prid')
+        
+
+        total = $('#total').text().substr(1, $('#total').val().lenght)
+
+        price = $('#price-'+id +' span').text()
+
+        quant = $('#quantility-'+id).val()
+        if(quant <= 1 && action == 'tru'){
+            alert("Số lượng của sản phẩm phải lớn hơn 1")
+            return;
+        }
+        if(action == 'cong'){
+            quantility = Number(quant) + 1
+        } else if(action == 'tru'){
+            quantility =  Number(quant) - 1
+        }
+        $.ajax({
+            url: "{% url 'shop:updateQuantility' %}",
+            data: {id: id, quantility: quantility, 'csrfmiddlewaretoken':"{{ csrf_token }}"},
+            method: 'POST',
+            success: function(result){
+                if(result.status =='success'){
+                    updateRow(id, quantility, price, total)
+                }
+            }
+        })
+    }
+    function updateRow(id, quantility, price, total){
+        $('#quantility-'+id).val(quantility)
+        total_cart_old = $('#total-'+id).text().substr(1, $('#total-'+id).text().lenght) //Tổng giá cũ của 1 cart cũ đó
+        
+        total_cart_order = Number(total) - Number(total_cart_old) //Tổng giá của các cart khác
+        total_cart_new = Number(price) * Number(quantility) //Tổng giá mới của 1 cart đó
+        $('#total-'+id).html('$' + total_cart_new)
+        total_carts = Number(total_cart_order) + Number(total_cart_new) //Tổng các cart mới
+        $('#total').html('$' + total_carts)
+
+    }
+    function deleteCart(even){
+        id = $(even).attr('prid')
+        
+        $.ajax({
+            url: "{% url 'shop:delete' %}",
+            data: {id: id, 'csrfmiddlewaretoken':"{{ csrf_token }}"},
+            method: 'POST',
+            success: function(result){
+                if(result.status == 'success'){
+                    deleteRow(id)
+                }
+            }
+        })
+    }
+    function deleteRow(id){
+        $('#cart-'+id).remove()
+    }
+
+
+</script>
+<!--/ End Shopping Cart -->
+{% endblock body_block %}

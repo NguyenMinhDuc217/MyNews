@@ -5,15 +5,28 @@ from stories.models import Category, Story
 import re
 from django.core.paginator import Paginator
 import datetime
+from datetime import datetime
 
 # Create your views here.
 def index(request):
+
     context ={}
+
+    value = 0
+    if(request.COOKIES.get('visits')):
+        value = int(request.COOKIES.get('visits'))
+    context['visits'] = value+1
+
+    list_visits = request.session.get('list_visits',False)
+    now = datetime.now()
+    request.session['list_visits'] = now.strftime('%m/%d/%Y, %H:%M:%S')
+    context['list_visits'] = list_visits
+    
 
     story_list = Story.objects.order_by("-public_day") #
     context['title'] = 'Home page' #title trên base.html/header 
     context['MEDIA_URL'] = settings.MEDIA_URL #
-    context['today'] = datetime.datetime.now() #thời gian trên header
+    context['today'] = datetime.now() #thời gian trên header
     context['latest'] = Story.objects.latest('pk') #bài mới nhất để gắn latest.id lên header
     context['categories'] = Category.objects.all() #danh mục để gắn lên header
 
@@ -23,8 +36,12 @@ def index(request):
 
     context['cat_id'] = 0 # bổ sung để gắn active cho menu navigation, mặc định = 0
     context['story_id'] = 0 # bổ sung để gắn active cho menu navigation, mặc định = 0
+
+    response = render(request, 'stories/index.html', context)
+    response.set_cookie('visits', value + 1, 60)
+    return response
    
-    return render(request,'stories/index.html', context)
+    # return render(request,'stories/index.html', context)
 
 def category(request, cat_id): #category
     context = {}

@@ -2,8 +2,9 @@
 {% load static %}
 {% block body_block %} 
 <!-- BẮT ĐẦU NỘI DUNG TRANG -->
+<h3>Tôi đã xem: {{visits}} lần</h3>
+<h3>Hôm nay: {{list_visits}}</h3>
 <div class="row home-slide">
- 
   <div class="col-md-6">
     <div class="home-slide-item">
       <a href="{% url 'stories:story.html' latest.id%}">
