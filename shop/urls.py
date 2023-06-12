@@ -15,4 +15,6 @@ urlpatterns = [
     path('updateQuantility', views.updateQuantility, name="updateQuantility"),
     path('delete', views.checkout, name="delete"),
     path('checkout.html', views.checkout, name='checkout.html'),
+    path('login.html', views.login, name='login.html'),
+    path('login.html', views.login, name='login.html'),
 ]

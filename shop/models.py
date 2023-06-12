@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.html import mark_safe #dùng tạo thumbnail
 from ckeditor_uploader.fields import RichTextUploadingField
+from django.contrib.auth.models import User
 import datetime
 
 # Create your models here.
@@ -51,3 +52,12 @@ class Cart(models.Model):
     def __str__(self):
         return self.name
     
+class UserProfileInfo(models.Model):
+    user = models.OneToOneField(User, on_delete=models.PROTECT)
+    address = models.CharField(max_length=250, unique=True)
+    phoneNumber = models.CharField(max_length=20, null=True)
+    image = models.ImageField(upload_to ="shop_media/customer/", default ="shop_media/default.png")
+    def thumbnail(self): 
+        return mark_safe(f'<img class="img-thumbnail" src = "{self.image.url}" width = "100"/>')
+    def str(self):
+        return self.user.username

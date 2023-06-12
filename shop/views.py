@@ -9,6 +9,8 @@ from django.core.paginator import Paginator
 from django.utils.safestring import mark_safe
 from django.http import HttpResponse
 import json
+from django.contrib.auth import authenticate
+from django.contrib.auth.decorators import login_requireds
 
 register = template.Library()
 # HÀM TÍNH TOÁN
@@ -168,3 +170,28 @@ def delete(request):
 def checkout(request):
     context = {}
     return render(request,'shop/checkout.html', context)
+
+def login(request):
+    if request.method == "POST":
+        username = request.post.get('username')
+        password = request.post.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            result = "Hello " + username
+            request.session['username'] = username
+            username = request.session.get('username', 0)
+            return render(request, 'shop/login.html', {'login_result': result, 'username': username})
+        else:
+            print("you can't login. ")
+            print("Username: {} and password: {}".format(username, password))
+            login_result = "Username hoặc password không chính xác"
+            return render(request, 'shop/login.html', {'login_result': login_result})
+    else:
+        return render(request, 'shop/login.html')
+    
+@login_required
+def log_out(request):
+    logout(request)
+    result = "Quý khách đã logout. Quý khách có thể login trở lại"
+    return render(request, "shop/login.html", {'logout_result': result})
