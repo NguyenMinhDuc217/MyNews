@@ -9,8 +9,8 @@
 				<div class="col-12">
 					<div class="bread-inner">
 						<ul class="bread-list">
-							<li><a href="index1.html">Home<i class="ti-arrow-right"></i></a></li>
-							<li class="active"><a href="blog-single.html">Contact</a></li>
+							<li><a href="{% url 'shop:login.html' %}">Home<i class="ti-arrow-right"></i></a></li>
+							<li class="active"><a href="{% url 'shop:sign-in.html' %}">Sign in</a></li>
 						</ul>
 					</div>
 				</div>
@@ -27,22 +27,40 @@
 						<div class="col-lg-8 col-12">
 							<div class="form-main">
 								<div class="title">
-									<h4>Liên lạc</h4>
-									<h3>Gửi email</h3>
+									<h4>Sign in</h4>
 								</div>
-								<form class="form" method="post" action="mail/mail.php">
+								<form class="form" method="post" action="{% url 'shop:sign-in.html' %}">
+									{% csrf_token %}
 									<div class="row">
 										<div class="col-lg-6 col-12">
 											<div class="form-group">
-												<label>Tên<span>*</span></label>
-												<input name="name" type="text" placeholder="">
+												<label>Last name<span>*</span></label>
+												<input name="lastname" type="text" placeholder="">
 											</div>
 										</div>
 										<div class="col-lg-6 col-12">
 											<div class="form-group">
-												<label>Subject<span>*</span></label>
-												<input name="subject" type="text" placeholder="">
+												<label>First name<span>*</span></label>
+												<input name="firstname" type="text" placeholder="">
 											</div>
+										</div>
+										<div class="col-lg-12 col-12">
+											<div class="form-group">
+												<label>username<span>*</span></label>
+												<input name="username" type="text" placeholder="">
+											</div>	
+										</div>
+										<div class="col-lg-6 col-12">
+											<div class="form-group">
+												<label>Password<span>*</span></label>
+												<input name="password" type="password" placeholder="">
+											</div>	
+										</div>
+										<div class="col-lg-6 col-12">
+											<div class="form-group">
+												<label>Confirm password<span>*</span></label>
+												<input name="confirm" type="password" placeholder="">
+											</div>	
 										</div>
 										<div class="col-lg-6 col-12">
 											<div class="form-group">
@@ -53,22 +71,33 @@
 										<div class="col-lg-6 col-12">
 											<div class="form-group">
 												<label>Phone<span>*</span></label>
-												<input name="company_name" type="text" placeholder="">
+												<input name="phoneNumber" type="text" placeholder="">
+											</div>	
+										</div>
+										<div class="col-lg-12 col-12">
+											<div class="form-group">
+												<label>Address<span>*</span></label>
+												<input name="address" type="text" placeholder="">
+											</div>	
+										</div>
+										<div class="col-lg-12 col-12">
+											<div class="form-group">
+												<label>Avatar<span>*</span></label>
+												<input name="avatar" type="file" placeholder="">
 											</div>	
 										</div>
 										<div class="col-12">
-											<div class="form-group message">
-												<label>Nội dung<span>*</span></label>
-												<textarea name="message" placeholder=""></textarea>
-											</div>
-										</div>
-										<div class="col-12">
 											<div class="form-group button">
-												<button type="submit" class="btn ">Gửi</button>
+												<button type="submit" class="btn ">Send</button>
 											</div>
 										</div>
 									</div>
 								</form>
+								{% comment %} <div class="notifications"></div> {% endcomment %}
+								<div class="title">
+									<h7 style="color:blue;">{% if registered %}Quý khách đã đăng ký tài khoản thành công{% endif %}</h7>
+									<h7 style="color:red";>{% if form_cus.errors %} {{form_cus.errors}} {% endif %}</h7>
+								</div>
 							</div>
 						</div>
 						<div class="col-lg-4 col-12">

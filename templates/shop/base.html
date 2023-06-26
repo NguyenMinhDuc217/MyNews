@@ -13,7 +13,9 @@
         <link href="https://fonts.googleapis.com/css?family=Poppins:200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i&display=swap" rel="stylesheet">
     
         <!-- StyleSheet -->
-    
+        
+        <!-- Notification -->
+        <link rel="stylesheet" href="{% static 'shop/' %}css/notification.css">
         <!-- Bootstrap -->
         <link rel="stylesheet" href="{% static 'shop/' %}css/bootstrap.css">
         <!-- Magnific Popup -->
@@ -39,6 +41,9 @@
         <link rel="stylesheet" href="{% static 'shop/' %}css/reset.css">
         <link rel="stylesheet" href="{% static 'shop/' %}style.css">
         <link rel="stylesheet" href="{% static 'shop/' %}css/responsive.css">
+
+        <!-- Font Awesome-->
+        <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
     </head>
 
     <body class="js">
@@ -52,6 +57,7 @@
                             <!-- Top Left -->
                             <div class="top-left">
                                 <ul class="list-main">
+                                    <li><i></i>{{today}}</li>
                                     <li><i class="ti-headphone-alt"></i> (028) 38 351 056</li>
                                     <li><i class="ti-email"></i> tuvan@csc.hcmus.edu.vn</li>
                                 </ul>
@@ -61,9 +67,13 @@
                         <div class="col-lg-8 col-md-12 col-12">
                             <!-- Top Right -->
                             <div class="right-content">
-                                <ul class="list-main">								
-                                    <li><i class="ti-user"></i> <a href="#">My account</a></li>
-                                    <li><i class="ti-power-off"></i><a href="{% url 'shop:login.html' %}">Login</a></li>
+                                <ul class="list-main">
+                                    {% if request.user.is_authenticated %}
+                                        <li><i class="ti-user"></i> <a href="#">{{request.user.username}}</a></li>
+                                        <li><i class="ti-power-off"></i><a href="{% url 'shop:logout' %}">Logout</a></li>
+                                    {% else %}
+                                        <li><i class="ti-power-off"></i><a href="{% url 'shop:login.html' %}">Login</a></li>
+                                    {% endif %}
                                 </ul>
                             </div>
                             <!-- End Top Right -->
@@ -86,7 +96,8 @@
                                 <div class="top-search"><a href="#0"><i class="ti-search"></i></a></div>
                                 <!-- Search Form -->
                                 <div class="search-top">
-                                    <form class="search-form" id="mobileSearch"  action="{% url 'shop:search_form.html'%}?" >
+                                    {% comment %} <form class="search-form" id="mobileSearch" action="{% url 'shop:search_form.html'%}?" > {% endcomment %}
+                                    <form class="search-form" id="mobileSearch" action="{% url 'shop:index.html'%}?" >
                                         <input type="text"  name="keyword" placeholder="Search here..."  value="{% if keyword != 'None' %}{{keyword}}{% endif %}" >
                                         <a value="search"  onclick="initSearch('mobileSearch')"><i class="ti-search"></i></a>
                                     </form>
@@ -99,7 +110,8 @@
                         <div class="col-lg-8 col-md-7 col-12">
                             <div class="search-bar-top"> 
                                 <div class="search-bar text-left"> 
-                                    <form id="desktopSearch" action="{% url 'shop:search_form.html'%}?" style="width:100%">
+                                    {% comment %} <form id="desktopSearch" action="{% url 'shop:search_form.html'%}?" style="width:100%"> {% endcomment %}
+                                    <form id="desktopSearch" action="{% url 'shop:index.html'%}?" style="width:100%">
                                         <div class="row">
                                             <div class="col-sm-4" style="width 50%">
                                                 <select name="subcategory_id" class="chosen" >
@@ -205,6 +217,8 @@
 
                                                         <li><a href="http://127.0.0.1:8000/">Stories</a></li>													
                                                         <li><a href="{% url 'shop:contact.html' %}">Liên hệ</a></li>
+
+                                                        <li><a href="{% url 'shop:read_feed' %}">RSS</a></li>
                                                     </ul>
                                             </div>
                                         </div>
@@ -224,6 +238,10 @@
             <!-- Anything outsite of this will be inherited if you extend! --> 
         {% endblock %}
 	
+        <div class="fuild-container">
+            <iframe style="width: 100%; height: 350px" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3919.2994504065846!2d106.69662227485712!3d10.788361589361118!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x31752f355ad805e9%3A0x2c9d679744d9e54b!2zNjAsIE5ndXnhu4VuIMSQw6xuaCBDaGnhu4N1LCDEkGEgS2FvLCBRdeG6rW4gMSwgVGjDoG5oIHBo4buRIEjhu5MgQ2jDrSBNaW5oLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1687173619408!5m2!1svi!2s" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        </div>
+
         <!-- Start Shop Services Area -->
         <section class="shop-services section home">
             <div class="container">
@@ -371,7 +389,9 @@
             </div>
         </div>
         <!-- Modal end -->
-	
+
+        <div class="notifications"></div>
+
         <!-- Start Footer Area -->
         <footer class="footer">
             <!-- Footer Top -->
@@ -461,7 +481,10 @@
                 </div>
             </div>
         </footer>
+        
         <!-- /End Footer Area -->
+
+        
  
         <!-- Jquery -->
         <script src="{% static 'shop/' %}js/jquery.min.js"></script>
@@ -496,7 +519,23 @@
         <!-- Active JS -->
         <script src="{% static 'shop/' %}js/active.js"></script>
         <script data-src="{% static 'plugins/' %}jquery-chosen/chosen-min.js"></script>
-        <script type="text/javascript"><!--
+        <script type="text/javascript">
+            function addtocart(aurl){
+                aurl = aurl + '&quantility=' + $('#quantility').val() + '&size=' + $('#size').val() + '&color=' + $('#color').val()
+                console.log(aurl)
+                $('#exampleModal').modal('hide');
+                $.ajax({
+                    url: aurl,
+                    type: "GET",
+                    dataType: "html",
+                    success: function(output_html){
+                        success_noti()
+                    },
+                    error: function(xhr, status){
+                        error_noti()
+                    },
+                })
+            }
             function quickview(aurl){
                 $.ajax({
                     url: aurl,
@@ -515,27 +554,27 @@
                 });
             }
             function initSearch(elem_id) {
-            //elem_id = ID element get parameter 
-            url_to_load = $('#' + elem_id).attr('action'); 
+                //elem_id = ID element get parameter 
+                url_to_load = $('#' + elem_id).attr('action'); 
             
-            //Convert form to data
-            var url_data = {}; 
-            $.each($('#' + elem_id).serializeArray(), function() {
-                if (this.value != '' && this.value != '*' && this.value != 'None'  ) {
-                var name = this.name;
-                var value = this.value;
-                if (!url_data[name]) {
-                    url_data[name] = [];
-                }
-                url_data[name].push(value);
-                }
-            });
-            //Convert data to url
-            $.each(url_data, function(uk, uv) {
-                url_to_load += '&' + uk + '=' + uv.join(",");
-            }); 
-            //alert(url_to_load);
-            location = url_to_load; 
+                //Convert form to data
+                var url_data = {}; 
+                $.each($('#' + elem_id).serializeArray(), function() {
+                    if (this.value != '' && this.value != '*' && this.value != 'None'  ) {
+                    var name = this.name;
+                    var value = this.value;
+                    if (!url_data[name]) {
+                        url_data[name] = [];
+                    }
+                    url_data[name].push(value);
+                    }
+                });
+                //Convert data to url
+                $.each(url_data, function(uk, uv) {
+                    url_to_load += '&' + uk + '=' + uv.join(",");
+                }); 
+                //alert(url_to_load);
+                location = url_to_load; 
             }
             $(document).ready(function() {
                 //$('.chosen').chosen({height: "150px",width: "100%",search_contains: true});
@@ -550,7 +589,99 @@
                     }
                 });
             });
-            //-->
+
+            {% comment %} START THÔNG BÁO {% endcomment %}
+                let notifications = document.querySelector('.notifications');
+                
+                function createToast(type, icon, title, text){
+                    let newToast = document.createElement('div');
+                    newToast.innerHTML = `
+                        <div class="toast ${type}">
+                            <i class="${icon}"></i>
+                            <div class="content">
+                                <div class="title">${title}</div>
+                                <span>${text}</span>
+                            </div>
+                            <i class="fa-solid fa-xmark" onclick="(this.parentElement).remove()"></i>
+                        </div>`;
+                    notifications.appendChild(newToast);
+                    newToast.timeOut = setTimeout(
+                        ()=>newToast.remove(), 5000
+                    )
+                }
+                function success_noti(){
+                    let type = 'success';
+                    let icon = 'fa-solid fa-circle-check';
+                    let title = 'Success';
+                    let text = 'This is a success toast.';
+                    createToast(type, icon, title, text);
+                }
+
+                function error_noti(){
+                    let type = 'error';
+                    let icon = 'fa-solid fa-circle-exclamation';
+                    let title = 'Error';
+                    let text = 'This is a error toast.';
+                    createToast(type, icon, title, text);
+                }
+
+                function warning_noti(){
+                    let type = 'warning';
+                    let icon = 'fa-solid fa-triangle-exclamation';
+                    let title = 'Warning';
+                    let text = 'This is a warning toast.';
+                    createToast(type, icon, title, text);
+                }
+                function info_noti(){
+                    let type = 'info';
+                    let icon = 'fa-solid fa-circle-info';
+                    let title = 'Info';
+                    let text = 'This is a info toast.';
+                    createToast(type, icon, title, text);
+                }
+            {% comment %} END THÔNG BÁO {% endcomment %}
+
+            // START update số lượng (- / + ) trong giỏ hàng
+                function updateQuantility(even, action){
+                    id = $(even).attr('prid')
+            
+                    total = $('#total').text().substr(1, $('#total').val().lenght)
+            
+                    price = $('#price-'+id +' span').text()
+            
+                    quant = $('#quantility-'+id).val()
+                    if(quant <= 1 && action == 'tru'){
+                        alert("Số lượng của sản phẩm phải lớn hơn 0")
+                        return;
+                    }
+                    if(action == 'cong'){
+                        quantility = Number(quant) + 1
+                    } else if(action == 'tru'){
+                        quantility =  Number(quant) - 1
+                    }
+                    $.ajax({
+                        url: "{% url 'shop:updateQuantility' %}",
+                        data: {id: id, quantility: quantility, 'csrfmiddlewaretoken':"{{ csrf_token }}"},
+                        method: 'POST',
+                        success: function(result){
+                            if(result.status =='success'){
+                                updateRow(id, quantility, price, total)
+                            }
+                        }
+                    })
+                }
+
+                function updateRow(id, quantility, price, total){
+                    $('#quantility-'+id).val(quantility)
+                    total_cart_old = $('#total-'+id).text().substr(1, $('#total-'+id).text().lenght) //Tổng giá cũ của 1 cart cũ đó
+                    
+                    total_cart_order = Number(total) - Number(total_cart_old) //Tổng giá của các cart khác
+                    total_cart_new = Number(price) * Number(quantility) //Tổng giá mới của 1 cart đó
+                    $('#total-'+id).html('$' + total_cart_new)
+                    total_carts = Number(total_cart_order) + Number(total_cart_new) //Tổng các cart mới
+                    $('#total').html('$' + total_carts)
+                }
+            // END update số lượng (- / +) trong giỏ hành
         </script>
     </body>
 </html>

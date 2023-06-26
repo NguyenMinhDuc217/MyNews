@@ -6,6 +6,13 @@ import re
 from django.core.paginator import Paginator
 import datetime
 from datetime import datetime
+from rest_framework import viewsets, permissions
+from .serializers import StorySerializer, CategorySerializer
+
+class StoryViewSet(viewsets.ModelViewSet):
+    queryset = Story.objects.all().order_by('-public_day')
+    serializer_class = StorySerializer 
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
 # Create your views here.
 def index(request):

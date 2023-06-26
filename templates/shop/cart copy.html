@@ -39,13 +39,6 @@
                     </thead>
                     <tbody>
                         {% for cart in carts%}
-                        <div class="products">
-                            <div class="sku_code">
-                                <div class="product">
-                                </div>
-                            </div>
-                        <div>
-
                         <tr id="cart-{{cart.id}}">
                             <td class="image" data-title="No"><img src="{{cart.product.image.url}}" alt="#"></td>
                             <td class="product-des" data-title="Description">

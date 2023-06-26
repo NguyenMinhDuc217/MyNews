@@ -19,12 +19,22 @@ from django.urls import path, include, re_path
 from django.conf.urls.static import static
 from django.conf import settings
 
+from rest_framework import routers
+from shop import views as shopviews
+from stories import views as storyviews
+
+router = routers.DefaultRouter()
+router.register(r'shop',shopviews.ShopViewSet)
+router.register(r'stories',storyviews.StoryViewSet)
 
 urlpatterns = [
+    path('', include('shop.urls', namespace="shop")),
     path('admin/', admin.site.urls),
     path('stories/', include('stories.urls')),
-    path('shop/', include('shop.urls')),
+    # path('shop/', include('shop.urls')),
     re_path(r'^ckeditor/',include('ckeditor_uploader.urls')),
+    path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
+    path(r'api/', include(router.urls)),
 ]
 
 urlpatterns += static(settings.STATIC_URL, document_root = settings.STATIC_ROOT)

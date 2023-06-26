@@ -1,6 +1,5 @@
 from django import forms
 from . import models
-#from django.db import models
 from django.core.validators import RegexValidator
 # from django.contrib.auth.models import User
 
@@ -31,6 +30,7 @@ class UserProfileInfoForm(forms.ModelForm):
         'title':'Your phone number must be (xxx)xxxxxxxxx or 0xxxxxxxx!'
         }
     ))
+    image = forms.ImageField(required=False)
     class Meta:
         model = models.UserProfileInfo
         exclude = ('user',)

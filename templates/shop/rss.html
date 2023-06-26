@@ -1,0 +1,50 @@
+{% extends 'shop/base.html' %}
+{% load static %}
+{% block body_block %}
+<style>
+    .fh5co_consectetur img{
+        width: 200px;
+        object-fit: contain;
+    }
+    .col-md-12 {
+        font-family: 'Poppins', sans-serif; 
+    }
+</style>
+<div class="container-fluid pb-4 pt-6 padding">
+    <div class="container padding">
+        <div class="row mx-0">
+            <div class="col-md-8 animate-box" data-animate-effect="fadeInLeft">
+                <div>
+                    <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">RSS Feeds</div>
+                </div>
+               
+                {% if feeds %}
+                {% for feed in feeds %}
+                <div>
+                    <div class='col-md-12'>
+                        {% comment %} {{feed}} {% endcomment %}
+                        <a href="{{feed.link}}" class="fh5co_magna py-2"><span style="color:red; font-weight: Bold; font-size:20px">{{feed.title}}</span></a>
+                        <a href="{{feed.link}}" class="fh5co_mini_time py-3">{{feed.author}} - {{entry.published}}</a>
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="fh5co_consectetur">{{feed.image|safe}}</div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="sub2">
+                                    {{feed.sub_2|safe}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                {% endfor %}
+                {% endif %}
+            <div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock body_block %}
+
