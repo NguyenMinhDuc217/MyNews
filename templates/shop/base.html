@@ -42,6 +42,8 @@
         <link rel="stylesheet" href="{% static 'shop/' %}style.css">
         <link rel="stylesheet" href="{% static 'shop/' %}css/responsive.css">
 
+        {% block 'block_link' %}{% endblock %}
+
         <!-- Font Awesome-->
         <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
     </head>
@@ -644,12 +646,15 @@
             // START update số lượng (- / + ) trong giỏ hàng
                 function updateQuantility(even, action){
                     id = $(even).attr('prid')
+                    console.log(id)
             
                     total = $('#total').text().substr(1, $('#total').val().lenght)
             
                     price = $('#price-'+id +' span').text()
+                    console.log(price)
             
                     quant = $('#quantility-'+id).val()
+                    console.log(quant)
                     if(quant <= 1 && action == 'tru'){
                         alert("Số lượng của sản phẩm phải lớn hơn 0")
                         return;
@@ -677,6 +682,7 @@
                     
                     total_cart_order = Number(total) - Number(total_cart_old) //Tổng giá của các cart khác
                     total_cart_new = Number(price) * Number(quantility) //Tổng giá mới của 1 cart đó
+                    console.log(price)
                     $('#total-'+id).html('$' + total_cart_new)
                     total_carts = Number(total_cart_order) + Number(total_cart_new) //Tổng các cart mới
                     $('#total').html('$' + total_carts)

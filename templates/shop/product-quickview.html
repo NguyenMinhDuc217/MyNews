@@ -42,11 +42,12 @@
             </div>
 
             <div class="size">
+                <form id="option">
                 <div class="row">
                     {% if option_mau %}
                         <div class="col-lg-6 col-12">
                             <h5 class="title">Color</h5>
-                            <select id="color" onchange="updateQuickViewProduct(this, action='color')">
+                            <select id="color" onchange="updateQuickViewProduct(this, action='color')" form="option">
                                 {% for op in option_mau %}
                                     <option id="action"  value="{{op.id}}" {% if op.id == product.id %}selected{%endif%}>{{op.value}}</option>
                                 {% endfor %}
@@ -56,23 +57,18 @@
 
                     {% if option_kich_thuoc %}
                         <div class="col-lg-6 col-12">
-                            {% comment %} {% with op.sku_code|add:'_kich_thuoc' as a %}
-                                {% if a in op.name%} {% endcomment %}
-
                             <h5 class="title">Screen size</h5>
-                            <select id="size" onchange="updateQuickViewProduct(this, action='size')">
+                            <select id="size" onchange="updateQuickViewProduct(this, action='size')" form="option">
                                 {% for op in option_kich_thuoc %}
                                     <option id="action" value="{{op.id}}" {% if op.id == product.id %}selected{%endif%}>{{op.value}}</option>
                                 {% endfor %}
                                 
                             </select>
-
-                                {% comment %} {% endif %}
-                            {% endwith %} {% endcomment %}
                         </div>
                     {% endif %}
 
                 </div>
+                </form>
             </div>
             <div class="quantity">
                 <!-- Input Order -->
@@ -92,7 +88,8 @@
                 <!--/ End Input Order -->
             </div>
             <div class="add-to-cart">
-                <a onclick="addtocart('{% url 'shop:add_to_cart' %}?product_id={{product.id}}')" class="btn">Add to cart</a>
+                {% comment %} <a onclick="addtocart('{% url 'shop:add_to_cart' %}?product_id={{product.id}}')" class="btn">Add to cart</a> {% endcomment %}
+                <a onclick="addtocart('{% url 'shop:add_to_cart' %}?sku_code={{product.sku_code}}')" class="btn">Add to cart</a>
                 <a href="#" class="btn min"><i class="ti-heart"></i></a>
                 <a href="#" class="btn min"><i class="fa fa-compress"></i></a>
             </div>
@@ -124,7 +121,6 @@
         }
         $('#quantility').val(quantility)
     }
-
     function updateQuickViewProduct(even, action){
         sku_code = $('#sku_code h7').text().trim()
 

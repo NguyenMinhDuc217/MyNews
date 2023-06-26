@@ -1,0 +1,62 @@
+.address{
+    padding: 28px 30px 24px;
+}
+.delivery_address{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.delivery_address_text{
+    display: flex;
+    align-items: center;
+    font-size: 1.125rem;
+    color: rgb(238, 77, 45);
+    margin-bottom: 20px;
+    text-transform: capitalize;
+    flex: 1 1 auto;
+}
+
+.delivery_address_icon{
+    display: flex;
+    margin-right: 9px;
+    color: #ee4d2d;
+    fill: currentColor;
+}
+
+.info_delivery_address{
+    display: flex;
+    align-items: center;
+}
+
+.info_delivery_address_default{
+    display: flex;
+    align-items: center;
+    font-size: 1rem;
+    word-break: break-word;
+}
+
+.info_delivery_address_name_phone{
+    font-weight: 700;
+    color: #222;
+}
+.info_delivery_address_address{
+    margin-left: 20px;
+    word-break: break-word;
+}
+.info_delivery_address_df{
+    padding: 2px 5px;
+    margin-left: 1.5em;
+    color: #ee4d2d;
+    border-radius: 1px;
+    border: 0.5px solid;
+    font-size: 10px;
+    text-transform: capitalize;
+    flex-shrink: 0;
+}
+.btn_change_delivery_address{
+    color: #4080ee;
+    text-transform: capitalize;
+    margin-left: 2.5rem;
+    cursor: pointer;
+}

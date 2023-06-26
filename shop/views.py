@@ -21,7 +21,6 @@ import json
 from rest_framework import viewsets, permissions
 from shop.serializers import ProductSerializer
 from django.forms.models import model_to_dict
-import base64
 from django.core import serializers
 
 
@@ -134,7 +133,6 @@ def shopgrid(request, subcat_id):
 def quickview(request, product_id):
     context = {}
     product = Product.objects.get(pk=product_id) #sp hiện tại)
-    print(product.id)
     
     option = Option.objects.filter(sku_code = product.sku_code).values()
     option_mau = []
@@ -194,21 +192,32 @@ def shopcart(request):
     context = {}
     carts = Cart.objects.filter(status=2)
     total = 0
+    group_sku_products = {}
+    sku_code = []
     for cart in carts:
         cart.product = Product.objects.get(pk=cart.product_id)
+        sku_code = cart.product.sku_code
+        product_id = cart.product_id
+        if sku_code not in group_sku_products:
+            group_sku_products[sku_code] = {}
+        group_sku_products[sku_code][product_id] = cart
         total += cart.product.price * cart.quantility
     
+        
+
+    print(carts)
+    print('----------------------------')
+    print(group_sku_products)
     context['total'] = total
-    context['carts'] = carts
-    context['carts_temp'] = list(carts)
+    context['carts'] = group_sku_products
+    context['products'] = group_sku_products
     return render(request,'shop/cart.html', context)
 
 def add_to_cart(request):
     context = {}
-    product_id = request.GET.get('product_id', 0)
+    product = Product.objects.filter(sku_code = request.GET.get('sku_code')).filter(option1 = request.GET.get('color')).filter(option2 = request.GET.get('size')).first()
     quantity_new = request.GET.get('quantility')
 
-    product = Product.objects.get(pk = product_id)
     if product is None:
         context = {"status": "error"}
         json_object = json.dumps(context, indent = 4) 

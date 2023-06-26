@@ -29,6 +29,8 @@
                 <table class="table shopping-summery">
                     <thead>
                         <tr class="main-hading">
+                            <td style="width: 1px;" class="text-center"><input type="checkbox"
+                                onclick="$('input[name*=\'selected\']').prop('checked', this.checked);" /></td>
                             <th>SẢN PHẨM</th>
                             <th>TÊN</th>
                             <th class="text-center">ĐƠN GIÁ</th>
@@ -37,44 +39,54 @@
                             <th class="text-center"><i class="ti-trash remove-icon"></i></th>
                         </tr>
                     </thead>
+                    
                     <tbody>
-                        {% for cart in carts%}
-                        <div class="products">
-                            <div class="sku_code">
-                                <div class="product">
-                                </div>
-                            </div>
-                        <div>
+                        {% for key, value in carts.items %}
+                            {% for k,v in value.items %}
+                            
+                                <tr id="cart-{{v.id}}">
+                                    {% comment %} <td>
+                                        <input type="checkbox" name="selected[]" value="<?php echo $account['customer_user_id']; ?>" <?php if
+                                            (in_array($account['customer_user_id'], $selected)) { ?>checked="checked"
+                                        <?php } ?> id="pr
+                                        <?php echo $account['customer_user_id']; ?>"/><label
+                                            for="pr<?php echo $account['customer_user_id']; ?>">&nbsp;</label>
+                                    </td> {% endcomment %}
+                                    <td>
+                                        <input type="checkbox" name="selected[]" value="" ><label></label>
+                                    </td>
+                                    <td class="image" data-title="No"><img src="{{v.product.image.url}}" alt="#"></td>
+                                    <td class="product-des" data-title="Description">
+                                        <p class="product-name"><a href="#">{{v.product.name}}</a></p>
+                                        <p class="product-des">{{v.description|safe}}</p>
+                                        <div class="sku_code_key">{{key}}<div>
+                                    </td>
+                                        <td class="price" id="price-{{v.id}}" data-title="Price" value="{{v.product.price}}">$<span>{{v.product.price}}</span></td>
+                                        <td class="qty" data-title="Qty"><!-- Input Order -->
+                                            <div class="input-group">
+                                                <div class="button minus">
+                                                    <button id="action" type="button" prid={{v.id}} onclick="updateQuantility(this, action='tru')" class="btn btn-primary btn-number">
+                                                        <i class="ti-minus"></i>
+                                                    </button>
+                                                </div>
+                                                <input id="quantility-{{v.id}}" type="text" name="quant[1]" class="input-number"  data-min="1" data-max="100" value="{{v.quantility}}">
+                                                <div class="button plus">
+                                                    <button id="action" type="button" prid={{v.id}} onclick="updateQuantility(this, action='cong')" class="btn btn-primary btn-number" >
+                                                        <i class="ti-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <!--/ End Input Order -->
+                                        </td>
+                                        <td class="total-amount"  data-title="Total">
+                                            <span id='total-{{v.id}}'>${{v.quantility|mul:v.product.price}}</span>
+                                        </td>
+                                        <td class="action" id="remove-{{v.id}}"  data-title="Remove"><a prid={{v.id}} onclick="deleteCart(this)" href=""><i class="ti-trash remove-icon"></i></a></td>
+                                </tr>
 
-                        <tr id="cart-{{cart.id}}">
-                            <td class="image" data-title="No"><img src="{{cart.product.image.url}}" alt="#"></td>
-                            <td class="product-des" data-title="Description">
-                                <p class="product-name"><a href="#">{{cart.product.name}}</a></p>
-                                <p class="product-des">{{cart.description|safe}}</p>
-                            </td>
-                            <td class="price" id="price-{{cart.id}}" data-title="Price" value="{{cart.product.price}}">$<span>{{cart.product.price}}</span></td>
-                            <td class="qty" data-title="Qty"><!-- Input Order -->
-                                <div class="input-group">
-                                    <div class="button minus">
-                                        <button id="action" type="button" prid={{cart.id}} onclick="updateQuantility(this, action='tru')" class="btn btn-primary btn-number">
-                                            <i class="ti-minus"></i>
-                                        </button>
-                                    </div>
-                                    <input id="quantility-{{cart.id}}" type="text" name="quant[1]" class="input-number"  data-min="1" data-max="100" value="{{cart.quantility}}">
-                                    <div class="button plus">
-                                        <button id="action" type="button" prid={{cart.id}} onclick="updateQuantility(this, action='cong')" class="btn btn-primary btn-number" >
-                                            <i class="ti-plus"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                <!--/ End Input Order -->
-                            </td>
-                            <td class="total-amount"  data-title="Total">
-                                <span id='total-{{cart.id}}'>${{cart.quantility|mul:cart.product.price}}</span>
-                            </td>
-                            <td class="action" id="remove-{{cart.id}}"  data-title="Remove"><a prid={{cart.id}} onclick="deleteCart(this)" href=""><i class="ti-trash remove-icon"></i></a></td>
-                        </tr>
+                            {% endfor %}
                         {% endfor %}
+                        
                     </tbody>
                 </table>
                 <!--/ End Shopping Summery -->
@@ -107,8 +119,8 @@
                                     <li class="last">Tổng đơn hàng<span>$310.00</span></li>
                                 </ul>
                                 <div class="button5">
-                                    <a href="#" class="btn">Thanh toán</a>
-                                    <a href="#" class="btn">Tiếp tục mua sắm</a>
+                                    <a href="{% url 'shop:checkout.html' %}" class="btn">Thanh toán</a>
+                                    <a href="{% url 'shop:index.html' %}" class="btn">Tiếp tục mua sắm</a>
                                 </div>
                             </div>
                         </div>
