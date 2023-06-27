@@ -146,7 +146,8 @@
             }
         })
     }
-    function updateRowDetail(sku_code, action){
+    function updateRowDetail(sku_code, action, pr){
+        console.log(pr)
         $('#price h3').html('$'+pr[0].fields.price)
         $('.quickview-peragraph').html(pr[0].fields.content)
     }
