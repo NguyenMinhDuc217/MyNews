@@ -1,6 +1,6 @@
 from django.urls import path, re_path
 from . import views
-from django.views import View
+# from django.views import View
 app_name = "shop"
 urlpatterns = [
     path('',views.index, name="index.html"),
@@ -17,12 +17,16 @@ urlpatterns = [
     path('updateQuickViewProduct', views.updateQuickViewProduct, name="updateQuickViewProduct"),
     path('delete', views.checkout, name="delete"),
     path('checkout.html', views.checkout, name='checkout.html'),
-    path('login.html', views.log_in, name='login.html'),
-    path('logout.html', views.log_out, name='logout'),
+    path('login.html', views.LoginView, name='login.html'),
+    path('logout.html', views.LogoutView, name='logout'),
     path('sign-in.html', views.sign_in, name='sign-in.html'),
     path('read_feed', views.read_feed, name='read_feed'),
 
     path('api_product', views.api_product, name='api_product'),
+
+    path('vouchers', views.voucher, name='voucher'),
+    path('pay', views.pay, name='pay.html'),
+
 
     
 ]

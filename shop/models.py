@@ -3,7 +3,9 @@ from django.utils.html import mark_safe #dùng tạo thumbnail
 from ckeditor_uploader.fields import RichTextUploadingField
 from django.contrib.auth.models import User
 import datetime
-import unidecode
+from typing import List
+from pydantic import BaseModel
+from django.utils import timezone
 
 
 class SKU(models.Model):
@@ -87,4 +89,33 @@ class UserProfileInfo(models.Model):
         return mark_safe(f'<img class="img-thumbnail" src = "{self.image.url}" width = "100"/>')
     def str(self):
         return self.user.username
+
+# class CustomDateTimeField(models.DateTimeField):
+#     def value_to_string(self, obj):
+#         val = self.value_from_object(obj)
+#         if val:
+#             val.replace(microsecond=0)
+#             return val.isoformat()
+#         return ''
+class Voucher(models.Model):
+    product_id = models.IntegerField(default=0)
+    name = models.CharField(max_length=150)
+    value = models.CharField(max_length=150)
+    type = models.CharField(max_length=150)
+    # day_start = CustomDateTimeField(auto_now_add=True)
+    # day_end = CustomDateTimeField(auto_now_add=True)
+    day_start = models.DateTimeField(default=timezone.now)
+    day_end = models.DateTimeField(default=timezone.now)
+    pay_method = models.CharField(max_length=150)
+    ORDER_STATUS = [(0, 'failed'), (1, 'success'), (2, 'wait')]
+    status = models.IntegerField(choices=ORDER_STATUS)
+
+    def __str__(self):
+        return self.name
     
+class PayMethod(models.Model):
+    namecode = models.CharField(max_length=150)
+    name = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.name

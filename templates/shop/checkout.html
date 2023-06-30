@@ -1,5 +1,6 @@
 {% extends 'shop/base.html' %}
 {% load static %}
+{% load mathfilters %}
 {% block 'block_link' %}
 <link rel="stylesheet" href="{% static 'shop/' %}css/checkout.css">
 <link rel="stylesheet" data-modern="true" href="https://deo.shopeemobile.com/shopee/shopee-pcmall-live-sg/assets/bundle.346c056188512638.css">
@@ -20,8 +21,9 @@
             <div class="info_delivery_address">
                 <div>
                     <div class="info_delivery_address_default">
-                        <div class="info_delivery_address_name_phone">Nguyễn Minh Đức (+84) 356155012</div>
-                        <div class="info_delivery_address_address">109/8a Bến Vân Đồn, Phường 9, Quận 4, TP. Hồ Chí Minh</div>
+                        {{ request.user.phoneNumber }}
+                        <div class="info_delivery_address_name_phone">{{ request.user.username }} (+84) {{user.phoneNumber}}</div>
+                        <div class="info_delivery_address_address">{{user.address}}</div>
                         <div class="info_delivery_address_df">Mặc định</div>
                     </div>
                 </div>
@@ -58,21 +60,23 @@
                             </button>
                         </div>
                         <div class="container_product_detail">
-                            <div class="product_detail">
-                                <div class="product_image">
-                                    <img src="https://images.pexels.com/photos/3573351/pexels-photo-3573351.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
+                            {% for cart in carts %}
+                                <div class="product_detail">
+                                    <div class="product_image">
+                                        <img src="{{cart.product.image.url}}">
+                                    </div>
+                                    <div class="product_name">
+                                        <p>{{cart.product.name}}</p>
+                                    </div>
+                                    <div class="product_type">
+                                        <p class="product_type_text">Loại: {{cart.product.option1}}, {{cart.product.option2}}</p>
+                                    </div>
+                                    <div class="product_prict"><p>${{cart.product.priceOrg}}</p></div>
+                                    <div class="product_quantity"><p>{{cart.quantility}}</p></div>
+                                    <div class="product_a_total product_a_total_null"><p>${{cart.product.priceOrg|mul:cart.quantility}}</p></div>
                                 </div>
-                                <div class="product_name">
-                                    <p>Lót Chuột Hợp Kim Nhôm Nguyên Khối Cao Cấp Mouse Pad kiêm Bàn di chuột bằng nhôm Aluminium Mouse Pad LOTCHU-NHOM</p>
-                                </div>
-                                <div class="product_type">
-                                    <p class="product_type_text">Loại: Xanh, XL</p>
-                                </div>
-                                <div class="product_prict"><p>$25</p></div>
-                                <div class="product_quantity"><p>1</p></div>
-                                <div class="product_a_total product_a_total_null"><p>1</p></div>
-                            </div>
-                            <div class="product_detail">
+                            {% endfor %}
+                            {% comment %} <div class="product_detail">
                                 <div class="product_image">
                                     <img src="https://images.pexels.com/photos/3573351/pexels-photo-3573351.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
                                 </div>
@@ -85,7 +89,7 @@
                                 <div class="product_prict"><p>$25</p></div>
                                 <div class="product_quantity"><p>1</p></div>
                                 <div class="product_a_total product_a_total_null"><p>1</p></div>
-                            </div>
+                            </div> {% endcomment %}
                         </div>
                         <div class="container_product_voucher">
                             

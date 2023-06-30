@@ -1,6 +1,9 @@
 {% extends 'shop/base.html' %}
 {% load static %}
 {% load mathfilters %}
+{% block 'block_link' %}
+<link rel="stylesheet" href="{% static 'shop/' %}css/modal.css">
+{% endblock %}
 {% block body_block %}
 <!-- Breadcrumbs -->
 <div class="breadcrumbs">
@@ -43,17 +46,9 @@
                     <tbody>
                         {% for key, value in carts.items %}
                             {% for k,v in value.items %}
-                            
                                 <tr id="cart-{{v.id}}">
-                                    {% comment %} <td>
-                                        <input type="checkbox" name="selected[]" value="<?php echo $account['customer_user_id']; ?>" <?php if
-                                            (in_array($account['customer_user_id'], $selected)) { ?>checked="checked"
-                                        <?php } ?> id="pr
-                                        <?php echo $account['customer_user_id']; ?>"/><label
-                                            for="pr<?php echo $account['customer_user_id']; ?>">&nbsp;</label>
-                                    </td> {% endcomment %}
                                     <td>
-                                        <input type="checkbox" name="selected[]" value="" ><label></label>
+                                        <input onclick('checkbox(this)') type="checkbox" name="product" value="{{v.id}}" id="{{v.id}}"><label></label>
                                     </td>
                                     <td class="image" data-title="No"><img src="{{v.product.image.url}}" alt="#"></td>
                                     <td class="product-des" data-title="Description">
@@ -103,11 +98,13 @@
                                     <form action="#" target="_blank">
                                         <input name="Coupon" placeholder="Nhập mã giảm giá">
                                         <button class="btn">Áp dụng</button>
+                                        <a href="" data-toggle="modal" data-target="#exampleModal" onclick="modalVoucher()" style="color:orange">Chọn mã</a>
                                     </form>
                                 </div>
                                 <div class="checkbox">
                                     <label class="checkbox-inline" for="2"><input name="news" id="2" type="checkbox"> Giao hàng (+20.000đ)</label>
                                 </div>
+                                
                             </div>
                         </div>
                         <div class="col-lg-4 col-md-7 col-12">
@@ -119,7 +116,8 @@
                                     <li class="last">Tổng đơn hàng<span>$310.00</span></li>
                                 </ul>
                                 <div class="button5">
-                                    <a href="{% url 'shop:checkout.html' %}" class="btn">Thanh toán</a>
+                                    <a onclick="pay('{% url 'shop:pay.html' %}')" class="btn">Thanh toán</a>
+                                    {% comment %} <a href="{% url 'shop:checkout.html' %}" onclick="pay()" class="btn">Thanh toán</a> {% endcomment %}
                                     <a href="{% url 'shop:index.html' %}" class="btn">Tiếp tục mua sắm</a>
                                 </div>
                             </div>
@@ -131,6 +129,136 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Choose Eshop Voucher</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+                <div class="voucher_type_title">Mã miễn phí vận chuyển</div>
+                <div class="voucher_each">
+                    <div class="voucher_card">
+                        <div class="voucher_card_left">
+                            <div class="voucher_card_left_child"></div>
+                        </div>
+                        <div class="voucher_card_right"></div>
+                        <div class="voucher_card_hideOverflow"></div>
+                        <div class="voucher_card_template">
+                            <div class="voucher_card_template_left">
+                                <div class="voucher_card_template_logo">
+                                    <img class="voucher_card_template_logo_img" src="https://cf.shopee.vn/file/sg-11134004-7qvf9-lfrr7rg2nyn9ee" alt="Logo">
+                                </div>
+                                <div class="voucher_card_template_logo_text1" data-cy="voucher_card_icon_text" style="color: white;">
+                                    Mã vận chuyển
+                                </div>
+                                <div class="voucher_card_template_logo_text2" data-cy="voucher_card_sub_icon_text">
+                                    HÀNG CỒNG KỀNH
+                                </div>
+                            </div>
+                            <div class="voucher_card_template_mid">
+                                <div class="voucher_card_template_mid_main_title">
+                                    <div class="voucher_card_template_mid_main_title_text">Giảm tối đa ₫75k</div>
+                                </div>
+                                <div class="voucher_card_template_mid_sub_title">Đơn tối thiểu đ500k</div>
+                                <div class="voucher_card_template_mid_label">
+                                    <div class="voucher_card_template_mid_label_container" data-cy="voucher_card_label">
+                                        <div class="voucher_card_template_mid_label_text" data-cy="voucher_card_label_content" style="color: red;">
+                                            DUY NHẤT 29.06
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="voucher_card_template_mid_duration">
+                                    <div class="voucher_card_template_mid_duration_container">
+                                        <span class="voucher_card_template_mid_duration_text">
+                                            Sắp hết hạn: Còn 5 giờ
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="voucher_card_template_right">
+                                <div></div>
+                                <div class="voucher_card_template_right_container_button">
+                                    <div class="voucher_card_template_right_button" data-cy="voucher_card_radiobutton"></div>
+                                </div>
+                                <div>
+                                    <div class="voucher_card_template_right_text">
+                                        <a href=""><span>Điều Kiện</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="voucher_card_left_item"><div class="">Số luợng có hạn</div></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="voucher_type_title">Mã đổi xu/hoàn xu</div>
+                <div class="voucher_each">
+                    <div class="voucher_card">
+                        <div class="voucher_card_left">
+                            <div class="voucher_card_left_child"></div>
+                        </div>
+                        <div class="voucher_card_right"></div>
+                        <div class="voucher_card_hideOverflow"></div>
+                        <div class="voucher_card_template">
+                            <div class="voucher_card_template_left">
+                                <div class="voucher_card_template_logo">
+                                    <img class="voucher_card_template_logo_img" src="https://cf.shopee.vn/file/sg-11134004-7qvf9-lfrr7rg2nyn9ee" alt="Logo">
+                                </div>
+                                <div class="voucher_card_template_logo_text1" data-cy="voucher_card_icon_text" style="color: white;">
+                                    Mã vận chuyển
+                                </div>
+                                <div class="voucher_card_template_logo_text2" data-cy="voucher_card_sub_icon_text">
+                                    HÀNG CỒNG KỀNH
+                                </div>
+                            </div>
+                            <div class="voucher_card_template_mid">
+                                <div class="voucher_card_template_mid_main_title">
+                                    <div class="voucher_card_template_mid_main_title_text">Giảm tối đa ₫75k</div>
+                                </div>
+                                <div class="voucher_card_template_mid_sub_title">Đơn tối thiểu đ500k</div>
+                                <div class="voucher_card_template_mid_label">
+                                    <div class="voucher_card_template_mid_label_container" data-cy="voucher_card_label">
+                                        <div class="voucher_card_template_mid_label_text" data-cy="voucher_card_label_content" style="color: red;">
+                                            DUY NHẤT 29.06
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="voucher_card_template_mid_duration">
+                                    <div class="voucher_card_template_mid_duration_container">
+                                        <span class="voucher_card_template_mid_duration_text">
+                                            Sắp hết hạn: Còn 5 giờ
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="voucher_card_template_right">
+                                <div></div>
+                                <div class="voucher_card_template_right_container_button">
+                                    <div class="voucher_card_template_right_button" data-cy="voucher_card_radiobutton"></div>
+                                </div>
+                                <div>
+                                    <div class="voucher_card_template_right_text">
+                                        <a href=""><span>Điều Kiện</span></a>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="voucher_card_left_item"><div class="">Số luợng có hạn</div></div>
+                        </div>
+                    </div>
+                </div>
+                
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
 <script>
     function deleteCart(even){
         id = $(even).attr('prid')
@@ -149,6 +277,53 @@
     function deleteRow(id){
         $('#cart-'+id).remove()
     }
+
+    function checkbox(even){
+        $(even).checked = true
+    }
+    function pay(aurl){
+        var checkedItems = []
+        $('input[name="product"]:checked').each(function(){
+            checkedItems.push($(this).val());
+        });
+        link_checkout = 'checkout.html'
+        $.each(checkedItems, function(index, value){
+            if (index == 0) {
+                aurl += '?listCardId=' + value
+                link_checkout += '?listCardId=' + value
+            } else {
+                aurl += '&listCardId=' + value
+                link_checkout += '&listCardId=' + value
+            }
+        })
+        $.ajax({
+            url: aurl,
+            data: {'csrfmiddlewaretoken':"{{ csrf_token }}"},
+            success: function(result){
+                if(result.status == 'success'){
+                    window.location.href = link_checkout
+                }
+            }
+        })
+        //console.log(aurl)
+        //window.location.href = "facebook.com"
+    }
+
+    function modalVoucher(){
+        //$('#myModal').modal('show')
+        $.ajax({
+            url: "{% url 'shop:voucher' %}",
+            data: {'csrfmiddlewaretoken':"{{ csrf_token }}"},
+            success: function(result){
+                if(result.status == 'success'){
+
+                }
+            }
+
+        })
+    }
+
+    
 
 </script>
 <!--/ End Shopping Cart -->

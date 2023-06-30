@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from shop.models import Category, SubCategory, Product, Cart, Option, SKU
+from shop.models import Category, SubCategory, Product, Cart, Option, SKU, Voucher, UserProfileInfo
 from django.conf import settings
 from django.db.models import F, Count
 from django.template.defaulttags import register
@@ -20,9 +20,7 @@ import datetime
 import json
 from rest_framework import viewsets, permissions
 from shop.serializers import ProductSerializer
-from django.forms.models import model_to_dict
 from django.core import serializers
-
 
 register = template.Library()
 # HÀM TÍNH TOÁN
@@ -202,12 +200,7 @@ def shopcart(request):
             group_sku_products[sku_code] = {}
         group_sku_products[sku_code][product_id] = cart
         total += cart.product.price * cart.quantility
-    
-        
 
-    print(carts)
-    print('----------------------------')
-    print(group_sku_products)
     context['total'] = total
     context['carts'] = group_sku_products
     context['products'] = group_sku_products
@@ -282,10 +275,6 @@ def delete(request):
     json_object = json.dumps(context, indent=4)
     return HttpResponse(json_object, content_type="application/json")
 
-def checkout(request):
-    context = {}
-    return render(request,'shop/checkout.html', context)
-
 def sign_in(request):
     registered = False
     if request.method == "POST":
@@ -330,7 +319,7 @@ def sign_in(request):
     context['registered'] = registered
     return render(request, 'shop/sign-in.html', context)
 
-def log_in(request):
+def LoginView(request):
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -350,11 +339,10 @@ def log_in(request):
         return render(request, 'shop/login.html')
     
 @login_required
-def log_out(request):
+def LogoutView(request):
     logout(request)
     result = "Quý khách đã logout. Quý khách có thể login trở lại"
     return render(request, "shop/login.html", {'logout_result': result})
-
 
 # API
 def read_feed(request):
@@ -386,5 +374,69 @@ class ShopViewSet(viewsets.ModelViewSet):
     serializer_class = ProductSerializer 
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
+def voucher(request):
+    context = {}
+    vouchers = Voucher.objects.all()
+    context['vouchers'] = vouchers
+    return render(request,'cart.html',context)  
 
+def pay(request):
+    context={}
+    listCardId = request.GET.getlist('listCardId')
+    carts = []
+    for card in listCardId:
+        cart = Cart.objects.get(pk = card)
+        product = Product.objects.get(pk = cart.product_id)
+        quantity_remaining = int(product.quantity_remaining)
+
+        if product is None:
+            context = {"status": "error"}
+            json_object = json.dumps(context, indent = 4) 
+            return HttpResponse(json_object, content_type="application/json")
+        
+        if quantity_remaining <= 0:
+            context = {"status": "error", "message":"Sản phẩm đã hết hàng"}
+            json_object = json.dumps(context, indent = 4) 
+            return HttpResponse(json_object, content_type="application/json")
+        
+        else:
+            carts.append(cart)
+    
+    linkCheckOut = 'shop/checkout.html'
+    ca_json = serializers.serialize('json', carts)
+    context ={ 
+        "status": "success",
+        "message": "Vui lòng thanh toán",
+        "cart": ca_json,
+        "linkCheckout" : linkCheckOut,
+    }
+    json_object = json.dumps(context, indent = 4) 
+    return HttpResponse(json_object, content_type="application/json")
+
+def checkout(request):
+    context = {}
+    listCardId = request.GET.getlist('listCardId')
+    user = UserProfileInfo.objects.get(user_id=request.user.id)
+    carts = []
+    for card in listCardId:
+        cart = Cart.objects.get(pk = card)
+        product = Product.objects.get(pk = cart.product_id)
+        quantity_remaining = int(product.quantity_remaining)
+
+        if product is None:
+            context = {"status": "error"}
+            json_object = json.dumps(context, indent = 4) 
+            return HttpResponse(json_object, content_type="application/json")
+        
+        if quantity_remaining <= 0:
+            context = {"status": "error", "message":"Sản phẩm đã hết hàng"}
+            json_object = json.dumps(context, indent = 4) 
+            return HttpResponse(json_object, content_type="application/json")
+        
+        else:
+            carts.append(cart)
+    
+    context['user'] = user
+    context['carts'] = carts
+    return render(request,'shop/checkout.html', context)
 

@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Category,  SubCategory, Product, Cart, UserProfileInfo, Option, SKU
+from django.contrib.auth.models import User
+from .models import Category,  SubCategory, Product, Cart, UserProfileInfo, Option, SKU, Voucher, PayMethod
 
 # nhìn thấy thông tin ở admin
 class SubCategoryAdmin(admin.ModelAdmin):
@@ -16,3 +17,5 @@ admin.site.register(Cart)
 admin.site.register(UserProfileInfo)
 admin.site.register(Option)
 admin.site.register(SKU)
+admin.site.register(Voucher)
+admin.site.register(PayMethod)
