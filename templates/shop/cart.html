@@ -1,6 +1,9 @@
 {% extends 'shop/base.html' %}
 {% load static %}
+{% load tags %}
 {% load mathfilters %}
+{% load tz %}
+{% load humanize %}
 {% block 'block_link' %}
 <link rel="stylesheet" href="{% static 'shop/' %}css/modal.css">
 {% endblock %}
@@ -117,7 +120,6 @@
                                 </ul>
                                 <div class="button5">
                                     <a onclick="pay('{% url 'shop:pay.html' %}')" class="btn">Thanh toán</a>
-                                    {% comment %} <a href="{% url 'shop:checkout.html' %}" onclick="pay()" class="btn">Thanh toán</a> {% endcomment %}
                                     <a href="{% url 'shop:index.html' %}" class="btn">Tiếp tục mua sắm</a>
                                 </div>
                             </div>
@@ -140,6 +142,7 @@
           </button>
         </div>
         <div class="modal-body">
+            {% for v in vouchers %}
                 <div class="voucher_type_title">Mã miễn phí vận chuyển</div>
                 <div class="voucher_each">
                     <div class="voucher_card">
@@ -162,20 +165,23 @@
                             </div>
                             <div class="voucher_card_template_mid">
                                 <div class="voucher_card_template_mid_main_title">
-                                    <div class="voucher_card_template_mid_main_title_text">Giảm tối đa ₫75k</div>
+                                    {% with start=v.name|find:'giảm' end=v.name|split_name_voucher:"giảm" %}
+                                    <div class="voucher_card_template_mid_main_title_text">Giảm{{end}}</div>
                                 </div>
-                                <div class="voucher_card_template_mid_sub_title">Đơn tối thiểu đ500k</div>
+                                <div class="voucher_card_template_mid_sub_title">{{v.name|slice:start}}</div>
+                                {% endwith %}
                                 <div class="voucher_card_template_mid_label">
                                     <div class="voucher_card_template_mid_label_container" data-cy="voucher_card_label">
                                         <div class="voucher_card_template_mid_label_text" data-cy="voucher_card_label_content" style="color: red;">
-                                            DUY NHẤT 29.06
+                                            {{v.day_end|date:"H:i d-m-Y"}}
                                         </div>
                                     </div>
                                 </div>
                                 <div class="voucher_card_template_mid_duration">
                                     <div class="voucher_card_template_mid_duration_container">
                                         <span class="voucher_card_template_mid_duration_text">
-                                            Sắp hết hạn: Còn 5 giờ
+                                                
+                                            Thời hạn: Còn {{v.time}} giờ
                                         </span>
                                     </div>
                                 </div>
@@ -183,7 +189,7 @@
                             <div class="voucher_card_template_right">
                                 <div></div>
                                 <div class="voucher_card_template_right_container_button">
-                                    <div class="voucher_card_template_right_button" data-cy="voucher_card_radiobutton"></div>
+                                        <input class="form-check-input" type="radio" value="" onclick="checkVoucher()" id="checkVoucher">
                                 </div>
                                 <div>
                                     <div class="voucher_card_template_right_text">
@@ -195,7 +201,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="voucher_type_title">Mã đổi xu/hoàn xu</div>
+            {% endfor %}
+                {% comment %} <div class="voucher_type_title">Mã đổi xu/hoàn xu</div>
                 <div class="voucher_each">
                     <div class="voucher_card">
                         <div class="voucher_card_left">
@@ -249,7 +256,7 @@
                             <div class="voucher_card_left_item"><div class="">Số luợng có hạn</div></div>
                         </div>
                     </div>
-                </div>
+                </div> {% endcomment %}
                 
         </div>
         <div class="modal-footer">

@@ -3,7 +3,6 @@ from shop.models import Category, SubCategory, Product, Cart, Option, SKU, Vouch
 from django.conf import settings
 from django.db.models import F, Count
 from django.template.defaulttags import register
-from django import template
 import re
 from django.core.paginator import Paginator
 from django.utils.safestring import mark_safe
@@ -16,21 +15,13 @@ from django.core.mail import EmailMultiAlternatives
 from MyNews.settings import EMAIL_HOST_USER
 from django.shortcuts import redirect
 import feedparser
-import datetime
+# import datetime
+from datetime import datetime
 import json
 from rest_framework import viewsets, permissions
 from shop.serializers import ProductSerializer
 from django.core import serializers
-
-register = template.Library()
-# HÀM TÍNH TOÁN
-@register.filter
-def subtract(value, arg):
-    return value - arg
-
-@register.filter(name='multiplication') # nhân
-def multiplication(value, arg):
-    return value * arg
+from datetime import timedelta
 
 # Create your views here.
 def index(request):
@@ -60,10 +51,13 @@ def index(request):
             product_new.append(product_old.id)
         context['products'] = Product.objects.filter(pk__in=product_new).order_by('-quantity_purchased')[0:5]
 
+    count_carts = Cart.objects.filter(user_id = request.user.id).count()
+    
     context['keyword'] = request.GET.get('keyword')
     context['top_viewed'] = Product.objects.order_by('-viewed')[0:3]
     context['best_seller'] = Product.objects.annotate(price_diff = F('price') - F('priceOrg')).order_by('-price_diff')[0:3]
     context['on_sale'] = Product.objects.order_by('-public_day')[0:3]
+    context['count_carts'] = count_carts
 
     return render(request, 'shop/index.html', context)
 
@@ -200,7 +194,24 @@ def shopcart(request):
             group_sku_products[sku_code] = {}
         group_sku_products[sku_code][product_id] = cart
         total += cart.product.price * cart.quantility
+        
+    vouchers = []
+    vouchers_all = Voucher.objects.filter(status = 1)
+    for v in vouchers_all:
+            str_day_end = v.day_end.strftime("%Y-%m-%d %H:%M:%S")
+            str_now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            if(str_day_end > str_now):
+                date_day_end = datetime.strptime(str_day_end, "%Y-%m-%d %H:%M:%S")
+                date_now = datetime.strptime(str_now, "%Y-%m-%d %H:%M:%S")
+                # print(date_day_end)
+                # print('--------------------------------------------')
+                # print(date_now)
+                time = date_day_end - date_now
+                v.time = time
+                vouchers.append(v)
+                
 
+    context['vouchers'] = vouchers
     context['total'] = total
     context['carts'] = group_sku_products
     context['products'] = group_sku_products
@@ -378,7 +389,7 @@ def voucher(request):
     context = {}
     vouchers = Voucher.objects.all()
     context['vouchers'] = vouchers
-    return render(request,'cart.html',context)  
+    return render(request,'shop/cart.html',context)  
 
 def pay(request):
     context={}
@@ -418,24 +429,36 @@ def checkout(request):
     listCardId = request.GET.getlist('listCardId')
     user = UserProfileInfo.objects.get(user_id=request.user.id)
     carts = []
+    price = 0
+    # option1 = []
+    # option2 = []
     for card in listCardId:
         cart = Cart.objects.get(pk = card)
         product = Product.objects.get(pk = cart.product_id)
         quantity_remaining = int(product.quantity_remaining)
+        price = price + (product.priceOrg * cart.quantility)
 
+        option1 = Option.objects.filter(pk = product.option1).filter(sku_code = product.sku_code)
+        option2 = Option.objects.filter(pk = product.option2).filter(sku_code = product.sku_code)
+
+        product.option1 = option1[0].value
+        product.option2 = option2[0].value
+        
         if product is None:
             context = {"status": "error"}
             json_object = json.dumps(context, indent = 4) 
             return HttpResponse(json_object, content_type="application/json")
         
         if quantity_remaining <= 0:
-            context = {"status": "error", "message":"Sản phẩm đã hết hàng"}
+            context = {"status": "error", "message":"Sản phẩm"+ product.name +"đã hết hàng"}
             json_object = json.dumps(context, indent = 4) 
             return HttpResponse(json_object, content_type="application/json")
         
         else:
             carts.append(cart)
-    
+            context['total_price'] = price
+
+    context['options'] = Option.objects.all()
     context['user'] = user
     context['carts'] = carts
     return render(request,'shop/checkout.html', context)

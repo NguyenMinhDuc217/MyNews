@@ -69,27 +69,22 @@
                                         <p>{{cart.product.name}}</p>
                                     </div>
                                     <div class="product_type">
-                                        <p class="product_type_text">Loại: {{cart.product.option1}}, {{cart.product.option2}}</p>
+                                        <p class="product_type_text">Loại: 
+                                            {% for op in options %}
+                                                {% if cart.product.option1 == op.id%}
+                                                    {{op.value}} ,
+                                                {% endif %}
+                                                {% if cart.product.option2 == op.id%}
+                                                    {{op.value}}
+                                                {% endif %}
+                                            {% endfor %}
+                                        </p>
                                     </div>
-                                    <div class="product_prict"><p>${{cart.product.priceOrg}}</p></div>
+                                    <div class="product_prict"><p>${{cart.product.priceOrg|floatformat}}</p></div>
                                     <div class="product_quantity"><p>{{cart.quantility}}</p></div>
-                                    <div class="product_a_total product_a_total_null"><p>${{cart.product.priceOrg|mul:cart.quantility}}</p></div>
+                                    <div class="product_a_total product_a_total_null"><p>${{cart.product.priceOrg|mul:cart.quantility|floatformat}}</p></div>
                                 </div>
                             {% endfor %}
-                            {% comment %} <div class="product_detail">
-                                <div class="product_image">
-                                    <img src="https://images.pexels.com/photos/3573351/pexels-photo-3573351.png?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1">
-                                </div>
-                                <div class="product_name">
-                                    <p>Áo sơ mi ngắn tay form rộng, thời trang hiện đại unisex chất liệu vải lụa mềm chống nhăn</p>
-                                </div>
-                                <div class="product_type">
-                                    <p class="product_type_text">Loại: Xanh, XL</p>
-                                </div>
-                                <div class="product_prict"><p>$25</p></div>
-                                <div class="product_quantity"><p>1</p></div>
-                                <div class="product_a_total product_a_total_null"><p>1</p></div>
-                            </div> {% endcomment %}
                         </div>
                         <div class="container_product_voucher">
                             
@@ -124,7 +119,7 @@
                     <h3 class="total_text_pay">Tổng thanh toán:</h3>
                 </div>
                 <div class="right">
-                    <div class="total_number">$25.000</div>
+                    <div class="total_number">${{total_price|floatformat}}</div>
                     <div class="total_number">$25</div> 
                     <div class="total_number_pay"><span style="color:red, font-size:40px, font-weight: bold">$25</span></div> 
                 </div>

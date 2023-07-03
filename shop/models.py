@@ -73,6 +73,8 @@ class Cart(models.Model):
 
     ORDER_STATUS = [(0, 'failed'), (1, 'success'), (2, 'wait')]
     status = models.IntegerField(choices=ORDER_STATUS)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+
 
     def __str__(self):
         return self.name
